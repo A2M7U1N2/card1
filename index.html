@@ -23,6 +23,8 @@
             --primary: #005eff;
             --primary-dark: #003399;
             --accent: #10b981;
+            --contact-color: #6c63ff;
+            --contact-hover: #554fd8;
             --background: #f8fafc;
             --card-bg: #ffffff;
             --text: #1e293b;
@@ -42,6 +44,8 @@
                 --text: #f1f5f9;
                 --text-light: #94a3b8;
                 --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+                --contact-color: #7b73ff;
+                --contact-hover: #665fe6;
             }
             
             .btn {
@@ -235,6 +239,48 @@
             background: rgba(0, 94, 255, 0.1);
         }
         
+        /* ===== زر حفظ الرقم - تنسيق محسن ===== */
+        .save-contact .btn {
+            background: linear-gradient(135deg, var(--contact-color) 0%, var(--contact-hover) 100%);
+            color: white;
+            border: none;
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .save-contact .btn i {
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .save-contact .btn .btn-text {
+            /* font-weight: 600; */ /* تم إزالته لضمان تطابق الخط */
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+        
+        .save-contact .btn:hover, .save-contact .btn:active {
+            background: linear-gradient(135deg, var(--contact-hover) 0%, var(--contact-color) 100%);
+            color: white;
+            transform: translateX(-5px) scale(1.02);
+            box-shadow: 0 5px 15px rgba(108, 99, 255, 0.3);
+        }
+        
+        .save-contact .btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .save-contact .btn:hover:before {
+            left: 100%;
+        }
+        
         /* ===== SOCIAL ===== */
         .social {
             display: flex;
@@ -267,10 +313,15 @@
         .whatsapp .btn {
             background: #25d366;
             color: white;
+            border: none;
         }
         
         .whatsapp .btn i {
             color: white;
+        }
+        
+        .whatsapp .btn:hover {
+            background: #128c7e;
         }
         
         /* ===== FOOTER ===== */
@@ -301,11 +352,19 @@
             .btn {
                 padding: 14px 16px;
             }
+            
+            .save-contact .btn {
+                padding: 15px 18px;
+            }
         }
         
         /* ===== LTR SUPPORT ===== */
         [dir="ltr"] .btn:hover {
             transform: translateX(5px);
+        }
+        
+        [dir="ltr"] .save-contact .btn:hover {
+            transform: translateX(5px) scale(1.02);
         }
         
         [dir="ltr"] .btn .fa-arrow-left {
@@ -335,6 +394,89 @@
         .toast.show {
             opacity: 1;
         }
+        
+        /* ===== MODAL للاسم ===== */
+        .contact-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .contact-modal.show {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: var(--radius);
+            max-width: 400px;
+            width: 90%;
+            box-shadow: var(--shadow);
+        }
+        
+        .modal-title {
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .modal-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            transition: var(--transition);
+        }
+        
+        .modal-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 94, 255, 0.1);
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .modal-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .modal-btn.primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .modal-btn.primary:hover {
+            background: var(--primary-dark);
+        }
+        
+        .modal-btn.secondary {
+            background: #f1f5f9;
+            color: var(--text);
+        }
+        
+        .modal-btn.secondary:hover {
+            background: #e2e8f0;
+        }
     </style>
 </head>
 <body>
@@ -354,36 +496,49 @@
     
     <!-- Toast Notification -->
     <div class="toast" id="toast"></div>
+    
+    <!-- Modal for Contact Name -->
+    <div class="contact-modal" id="contactModal">
+        <div class="modal-content">
+            <div class="modal-title">
+                <i class="fas fa-user-plus" style="margin-left: 8px;"></i>
+                إدخال اسم جهة الاتصال
+            </div>
+            <input type="text" 
+                   id="contactNameInput" 
+                   class="modal-input" 
+                   placeholder="أدخل اسم جهة الاتصال..."
+                   maxlength="30">
+            <div class="modal-actions">
+                <button class="modal-btn secondary" id="cancelBtn">إلغاء</button>
+                <button class="modal-btn primary" id="confirmBtn">حفظ الرقم</button>
+            </div>
+        </div>
+    </div>
 
     <script>
         // ==================== CONFIGURATION ====================
-        // ──────────────────────────────────────────────────────
-        // كل التعديلات تتم هنا في مكان واحد فقط!
-        // ──────────────────────────────────────────────────────
-        
         const cardData = {
-            // ─── الألوان (غيّرها هنا بس) ───
             colors: {
                 primary: "#005eff",
                 primaryDark: "#003399",
                 accent: "#10b981",
+                contactColor: "#6c63ff",
+                contactHover: "#554fd8",
                 background: "#f8fafc",
                 cardBackground: "#ffffff",
                 text: "#1e293b",
                 textLight: "#64748b"
             },
             
-            // ─── الاتجاه واللغة ───
-            direction: "rtl",          // "rtl" أو "ltr"
-            language: "ar",            // "ar" أو "en"
+            direction: "rtl",
+            language: "ar",
             
-            // ─── بيانات الشخص ───
             name: "م. مارك عاطف",
             title: "طالب في كلية هندسة قسم CCE",
             description: "",
-            photo: "https://scontent.fcai30-1.fna.fbcdn.net/v/t51.82787-15/601916198_18521282161064714_3691868551651814149_n.jpg?stp=dst-jpegr_tt6&_nc_cat=106&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeFS_ut0OQsCb3arN_boOdtHHFkOVyWDZE4cWQ5XJYNkTtLW4fsO4eQYHOsA0kN__IHqbLJU4U4N9NVCsXCOpxAD&_nc_ohc=UHXISo0Bo-MQ7kNvwH6hc33&_nc_oc=AdmA1VFn4Wrnuz8sTUYldOWRPImbw8n5yupFkE4BHv6ZxL-oq9Nzai7fmaMtDQQUPvY&_nc_zt=23&se=-1&_nc_ht=scontent.fcai30-1.fna&_nc_gid=K4xGoLuhx5K4i1rZ_cMmsA&oh=00_AfudIwDbytfV9Z9RWWnfuY6SuG4U_JIc-uAlCCNCPsndYA&oe=698FC0D1",  // رابط الصورة أو "" لو مفيش صورة
+            photo: "https://scontent.fcai30-1.fna.fbcdn.net/v/t51.82787-15/601916198_18521282161064714_3691868551651814149_n.jpg?stp=dst-jpegr_tt6&_nc_cat=106&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeFS_ut0OQsCb3arN_boOdtHHFkOVyWDZE4cWQ5XJYNkTtLW4fsO4eQYHOsA0kN__IHqbLJU4U4N9NVCsXCOpxAD&_nc_ohc=UHXISo0Bo-MQ7kNvwH6hc33&_nc_oc=AdmA1VFn4Wrnuz8sTUYldOWRPImbw8n5yupFkE4BHv6ZxL-oq9Nzai7fmaMtDQQUPvY&_nc_zt=23&se=-1&_nc_ht=scontent.fcai30-1.fna&_nc_gid=K4xGoLuhx5K4i1rZ_cMmsA&oh=00_AfudIwDbytfV9Z9RWWnfuY6SuG4U_JIc-uAlCCNCPsndYA&oe=698FC0D1",
             
-            // ─── الأقسام والأزرار ───
             sections: [
                 {
                     title: "التواصل",
@@ -391,7 +546,12 @@
                     buttons: [
                         { icon: "fas fa-phone", text: "01140567825", link: "tel:01140567825", type: "phone", copyable: true },
                         { icon: "fab fa-whatsapp", text: "واتساب", link: "https://wa.me/201140567825", type: "whatsapp" },
-                        { icon: "fas fa-envelope", text: "الإيميل", link: "mailto:example@email.com" }
+                        { icon: "fas fa-envelope", text: "الإيميل", link: "mailto:markatf219@gmail.com" },
+                        { 
+                            icon: "fas fa-address-book", 
+                            text: "حفظ الرقم في جهات الاتصال",
+                            type: "save-contact"
+                        }
                     ]
                 },
                 {
@@ -410,7 +570,6 @@
                 }
             ],
             
-            // ─── السوشيال ميديا ───
             social: [
                 { icon: "fab fa-facebook-f", link: "https://web.facebook.com/mark.atef.587/", label: "فيسبوك" },
                 { icon: "fab fa-instagram",  link: "https://www.instagram.com/_mark_atef_/", label: "إنستجرام" },
@@ -418,13 +577,11 @@
                 { icon: "fab fa-linkedin-in",link: "https://www.linkedin.com/in/mark-atef-796003264/", label: "لينكدإن" }
             ],
             
-            // ─── الفوتر ───
             footerText: "© 2026 - جميع الحقوق محفوظة"
         };
         
         // ==================== UTILITY FUNCTIONS ====================
         
-        // ─── عرض إشعار مؤقت ───
         function showToast(message) {
             const toast = document.getElementById('toast');
             toast.textContent = message;
@@ -435,7 +592,6 @@
             }, 3000);
         }
         
-        // ─── نسخ النص إلى الحافظة ───
         function copyToClipboard(text) {
             navigator.clipboard.writeText(text)
                 .then(() => {
@@ -447,16 +603,149 @@
                 });
         }
         
-        // ─── إنشاء زر ───
+        // ==================== CONTACT SAVING FUNCTIONS ====================
+        
+        function showContactModal() {
+            const modal = document.getElementById('contactModal');
+            const input = document.getElementById('contactNameInput');
+            
+            // تعيين القيمة الافتراضية
+            input.value = cardData.name;
+            
+            // عرض المودال
+            modal.classList.add('show');
+            
+            // تركيز على حقل الإدخال
+            setTimeout(() => {
+                input.focus();
+                input.select();
+            }, 100);
+        }
+        
+        function hideContactModal() {
+            const modal = document.getElementById('contactModal');
+            modal.classList.remove('show');
+        }
+        
+        function saveContactToPhone(contactName) {
+            // الحصول على رقم الهاتف
+            const phoneButton = cardData.sections[0].buttons.find(btn => btn.type === 'phone');
+            const phoneNumber = phoneButton ? phoneButton.text : '';
+            
+            if (!phoneNumber) {
+                showToast("لم يتم العثور على رقم الهاتف");
+                return;
+            }
+            
+            if (!contactName) {
+                showToast("الرجاء إدخال اسم جهة الاتصال");
+                return;
+            }
+            
+            // إنشاء vCard
+            const cleanPhone = phoneNumber.replace(/\D/g, '');
+            const vCardData = `BEGIN:VCARD
+VERSION:3.0
+FN:${contactName}
+TEL;TYPE=CELL,VOICE:${cleanPhone}
+END:VCARD`;
+            
+            // إنشاء ملف للتحميل
+            const blob = new Blob([vCardData], { type: 'text/vcard;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `${contactName.replace(/\s+/g, '_')}.vcf`;
+            link.style.display = 'none';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // تحرير الذاكرة
+            setTimeout(() => URL.revokeObjectURL(url), 100);
+            
+            showToast(`تم إنشاء ملف جهة الاتصال: ${contactName}`);
+            
+            // إرسال حدث لـ Google Analytics
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'save_contact', {
+                    'event_category': 'engagement',
+                    'event_label': 'حفظ الرقم',
+                    'value': 1
+                });
+            }
+        }
+        
+        // ==================== EVENT LISTENERS ====================
+        
+        function setupEventListeners() {
+            // زر الإلغاء في المودال
+            document.getElementById('cancelBtn').addEventListener('click', hideContactModal);
+            
+            // زر التأكيد في المودال
+            document.getElementById('confirmBtn').addEventListener('click', () => {
+                const contactName = document.getElementById('contactNameInput').value.trim();
+                hideContactModal();
+                
+                if (contactName) {
+                    saveContactToPhone(contactName);
+                }
+            });
+            
+            // السماح بالضغط على Enter في حقل الإدخال
+            document.getElementById('contactNameInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    document.getElementById('confirmBtn').click();
+                }
+            });
+            
+            // إغلاق المودال عند النقر خارج المحتوى
+            document.getElementById('contactModal').addEventListener('click', (e) => {
+                if (e.target.classList.contains('contact-modal')) {
+                    hideContactModal();
+                }
+            });
+        }
+        
+        // ==================== BUTTON CREATION ====================
+        
         function createButton(buttonData, sectionType = '') {
+            if (buttonData.type === 'save-contact') {
+                // استخدام <a> بدلاً من <button> لضمان نفس خصائص الخط
+                const button = document.createElement('a');
+                button.href = "javascript:void(0)";
+                button.className = `btn ${buttonData.type || ''}`;
+                button.setAttribute('aria-label', buttonData.text);
+                button.setAttribute('role', 'button'); // للحفاظ على سلوك زر لإمكانية الوصول
+                
+                button.innerHTML = `
+                    <i class="${buttonData.icon}"></i>
+                    <span class="btn-text">${buttonData.text}</span>
+                    <i class="fas fa-arrow-left"></i>
+                `;
+                
+                button.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showContactModal();
+                });
+                
+                return button;
+            }
+            
+            // باقي الأزرار العادية
             const button = document.createElement('a');
             button.href = buttonData.link;
             button.className = `btn ${buttonData.type || ''}`;
-            button.target = '_blank';
-            button.rel = 'noopener noreferrer';
+            
+            if (buttonData.link && !buttonData.link.startsWith('tel:')) {
+                button.target = '_blank';
+                button.rel = 'noopener noreferrer';
+            }
+            
             button.setAttribute('aria-label', buttonData.text);
             
-            // إضافة زر النسخ لأرقام الهواتف
             let copyButton = '';
             if (buttonData.copyable) {
                 copyButton = `<button class="btn-copy" aria-label="نسخ الرقم">
@@ -471,7 +760,6 @@
                 ${copyButton}
             `;
             
-            // إضافة حدث النسخ إذا كان الزر قابلاً للنسخ
             if (buttonData.copyable) {
                 const copyBtn = button.querySelector('.btn-copy');
                 copyBtn.addEventListener('click', (e) => {
@@ -486,7 +774,6 @@
         
         // ==================== RENDER FUNCTIONS ====================
         
-        // ─── تطبيق الألوان ───
         function applyColors() {
             const root = document.documentElement;
             const colors = cardData.colors;
@@ -494,13 +781,14 @@
             root.style.setProperty('--primary', colors.primary);
             root.style.setProperty('--primary-dark', colors.primaryDark);
             root.style.setProperty('--accent', colors.accent);
+            root.style.setProperty('--contact-color', colors.contactColor);
+            root.style.setProperty('--contact-hover', colors.contactHover);
             root.style.setProperty('--background', colors.background);
             root.style.setProperty('--card-bg', colors.cardBackground);
             root.style.setProperty('--text', colors.text);
             root.style.setProperty('--text-light', colors.textLight);
         }
         
-        // ─── عرض الصورة الشخصية ───
         function renderAvatar() {
             const avatarDiv = document.createElement('div');
             avatarDiv.className = 'avatar';
@@ -520,7 +808,6 @@
             return avatarDiv;
         }
         
-        // ─── عرض الهيدر ───
         function renderHeader() {
             const header = document.getElementById('header');
             
@@ -545,7 +832,6 @@
             header.appendChild(descEl);
         }
         
-        // ─── عرض الأقسام ───
         function renderSections() {
             const container = document.getElementById('sections');
             container.innerHTML = '';
@@ -571,7 +857,6 @@
             });
         }
         
-        // ─── عرض روابط التواصل الاجتماعي ───
         function renderSocial() {
             const container = document.getElementById('social');
             container.innerHTML = '';
@@ -589,7 +874,6 @@
             });
         }
         
-        // ─── عرض الفوتر ───
         function renderFooter() {
             const footer = document.getElementById('footer');
             footer.textContent = cardData.footerText;
@@ -597,25 +881,18 @@
         
         // ==================== INITIALIZATION ====================
         
-        // ─── تهيئة التطبيق ───
         function initApp() {
-            // تطبيق الاتجاه واللغة
             document.documentElement.dir = cardData.direction;
             document.documentElement.lang = cardData.language;
             
-            // تطبيق الألوان
             applyColors();
-            
-            // عرض جميع المكونات
             renderHeader();
             renderSections();
             renderSocial();
             renderFooter();
-            
-            // إضافة تفاعلات اللمس
+            setupEventListeners();
             addTouchInteractions();
             
-            // إرسال حدث للـ Google Analytics
             if (typeof gtag !== 'undefined') {
                 gtag('event', 'page_view', {
                     'page_title': document.title,
@@ -625,7 +902,6 @@
             }
         }
         
-        // ─── إضافة تفاعلات اللمس ───
         function addTouchInteractions() {
             const buttons = document.querySelectorAll('.btn, .social-btn');
             
@@ -638,12 +914,9 @@
                     this.style.transform = '';
                 });
                 
-                // تتبع النقرات في Google Analytics
-                btn.addEventListener('click', function() {
-                    if (typeof gtag !== 'undefined') {
+                if (typeof gtag !== 'undefined') {
+                    btn.addEventListener('click', function() {
                         let buttonLabel = '';
-                        
-                        // الحصول على نص الزر
                         const btnText = this.querySelector('.btn-text');
                         if (btnText) {
                             buttonLabel = btnText.textContent;
@@ -652,47 +925,33 @@
                             buttonLabel = icon ? icon.className.replace('fab fa-', '').replace('fas fa-', '').replace('far fa-', '') : 'button';
                         }
                         
-                        // إرسال حدث النقر
                         gtag('event', 'click', {
                             'event_category': 'engagement',
                             'event_label': buttonLabel,
                             'value': 1
                         });
-                    }
-                });
+                    });
+                }
             });
         }
         
-        // بدء التطبيق عند تحميل الصفحة
         document.addEventListener('DOMContentLoaded', initApp);
         
         // ==================== EXPORT FUNCTIONS ====================
-        // (للاستخدام الخارجي إذا لزم الأمر)
-        
-        // دالة لإضافة قسم جديد (للتوسعة)
-        function addSection(sectionData) {
-            cardData.sections.push(sectionData);
-            renderSections();
-        }
-        
-        // دالة لتحديث المعلومات (للتوسعة)
-        function updateInfo(newInfo) {
-            Object.assign(cardData, newInfo);
-            renderHeader();
-            applyColors();
-        }
-        
-        // دالة لتغيير الألوان (للتوسعة)
-        function updateColors(newColors) {
-            Object.assign(cardData.colors, newColors);
-            applyColors();
-        }
-        
-        // جعل الدوال متاحة للاستخدام من الخارج
         window.cardManager = {
-            addSection,
-            updateInfo,
-            updateColors,
+            addSection: (sectionData) => {
+                cardData.sections.push(sectionData);
+                renderSections();
+            },
+            updateInfo: (newInfo) => {
+                Object.assign(cardData, newInfo);
+                renderHeader();
+                applyColors();
+            },
+            updateColors: (newColors) => {
+                Object.assign(cardData.colors, newColors);
+                applyColors();
+            },
             getData: () => cardData
         };
     </script>
