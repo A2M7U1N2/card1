@@ -14,15 +14,15 @@
       gtag('config', 'G-P343LZ8Y1S');
     </script>
     
+    <!-- Font Awesome (نسخة مخففة) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* ===== VARIABLES ===== */
         :root {
-            /* الألوان - غيرها هنا فقط */
+            /* الألوان - ستتم تعبئتها ديناميكيًا من JavaScript */
             --primary: #005eff;
-            --primary-dark: #090082;
-            --secondary: #10b981;
-            --secondary-dark: #059669;
+            --primary-dark: #003399;
+            --accent: #10b981;
             --background: #f8fafc;
             --card-bg: #ffffff;
             --text: #1e293b;
@@ -32,6 +32,43 @@
             --radius: 20px;
             --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
             --transition: all 0.3s ease;
+        }
+        
+        /* ===== DARK MODE ===== */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --background: #0f172a;
+                --card-bg: #1e293b;
+                --text: #f1f5f9;
+                --text-light: #94a3b8;
+                --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            }
+            
+            .btn {
+                background: #334155;
+            }
+            
+            .social-btn {
+                background: #334155;
+            }
+        }
+        
+        /* ===== REDUCED MOTION ===== */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+            
+            .btn:hover,
+            .btn:active,
+            .social-btn:hover {
+                transform: none !important;
+            }
         }
         
         /* ===== RESET & BASE ===== */
@@ -48,12 +85,7 @@
             min-height: 100vh;
             padding: 20px;
             line-height: 1.6;
-            direction: var(--direction, rtl);
-        }
-        
-        [dir="ltr"] body {
-            text-align: left;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
         
         /* ===== CARD ===== */
@@ -87,6 +119,7 @@
             justify-content: center;
             font-size: 48px;
             color: var(--primary);
+            overflow: hidden;
         }
         
         .avatar img {
@@ -157,6 +190,7 @@
             color: var(--text);
             transition: var(--transition);
             border: 2px solid transparent;
+            cursor: pointer;
         }
         
         .btn:hover, .btn:active {
@@ -186,12 +220,19 @@
             opacity: 0.7;
         }
         
-        [dir="ltr"] .btn:hover {
-            transform: translateX(5px);
+        .btn-copy {
+            margin-left: 10px;
+            background: transparent;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
         }
         
-        [dir="ltr"] .btn .fa-arrow-left {
-            transform: rotate(180deg);
+        .btn-copy:hover {
+            background: rgba(0, 94, 255, 0.1);
         }
         
         /* ===== SOCIAL ===== */
@@ -262,17 +303,37 @@
             }
         }
         
-        /* ===== QR CODE STYLE ===== */
-        .qrcode {
-            text-align: center;
-            margin: 25px 0;
+        /* ===== LTR SUPPORT ===== */
+        [dir="ltr"] .btn:hover {
+            transform: translateX(5px);
         }
         
-        .qrcode img {
-            max-width: 150px;
-            border: 10px solid white;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        [dir="ltr"] .btn .fa-arrow-left {
+            transform: rotate(180deg);
+        }
+        
+        [dir="ltr"] body {
+            text-align: left;
+        }
+        
+        /* ===== TOAST NOTIFICATION ===== */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .toast.show {
+            opacity: 1;
         }
     </style>
 </head>
@@ -290,42 +351,50 @@
         <!-- Footer -->
         <div class="footer" id="footer"></div>
     </div>
+    
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
 
     <script>
         // ==================== CONFIGURATION ====================
-        // غير كل البيانات هنا فقط! (مكان واحد للتعديل)
+        // ──────────────────────────────────────────────────────
+        // كل التعديلات تتم هنا في مكان واحد فقط!
+        // ──────────────────────────────────────────────────────
         
-        const CONFIG = {
-            // === معرف الكارت ===
-            cardId: "card_001",
-            
-            // === المظهر العام ===
-            direction: "rtl", // rtl أو ltr
-            primaryColor: "#005eff", // اللون الرئيسي
-            secondaryColor: "#090082", // اللون الثانوي
-            
-            // === المعلومات الشخصية ===
-            info: {
-                name: "م. مارك عاطف",
-                title: "طالب في كلية هندسة قسم CCE ",
-                description: "",
-                image: "https://scontent.fcai30-1.fna.fbcdn.net/v/t51.82787-15/601916198_18521282161064714_3691868551651814149_n.jpg?stp=dst-jpegr_tt6&_nc_cat=106&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeFS_ut0OQsCb3arN_boOdtHHFkOVyWDZE4cWQ5XJYNkTtLW4fsO4eQYHOsA0kN__IHqbLJU4U4N9NVCsXCOpxAD&_nc_ohc=UHXISo0Bo-MQ7kNvwH6hc33&_nc_oc=AdmA1VFn4Wrnuz8sTUYldOWRPImbw8n5yupFkE4BHv6ZxL-oq9Nzai7fmaMtDQQUPvY&_nc_zt=23&se=-1&_nc_ht=scontent.fcai30-1.fna&_nc_gid=K4xGoLuhx5K4i1rZ_cMmsA&oh=00_AfudIwDbytfV9Z9RWWnfuY6SuG4U_JIc-uAlCCNCPsndYA&oe=698FC0D1" // رابط الصورة
-                // image: false // ضع false إذا بدون صورة
+        const cardData = {
+            // ─── الألوان (غيّرها هنا بس) ───
+            colors: {
+                primary: "#005eff",
+                primaryDark: "#003399",
+                accent: "#10b981",
+                background: "#f8fafc",
+                cardBackground: "#ffffff",
+                text: "#1e293b",
+                textLight: "#64748b"
             },
             
-            // === الأقسام الرئيسية ===
+            // ─── الاتجاه واللغة ───
+            direction: "rtl",          // "rtl" أو "ltr"
+            language: "ar",            // "ar" أو "en"
+            
+            // ─── بيانات الشخص ───
+            name: "م. مارك عاطف",
+            title: "طالب في كلية هندسة قسم CCE",
+            description: "",
+            photo: "https://scontent.fcai30-1.fna.fbcdn.net/v/t51.82787-15/601916198_18521282161064714_3691868551651814149_n.jpg?stp=dst-jpegr_tt6&_nc_cat=106&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeFS_ut0OQsCb3arN_boOdtHHFkOVyWDZE4cWQ5XJYNkTtLW4fsO4eQYHOsA0kN__IHqbLJU4U4N9NVCsXCOpxAD&_nc_ohc=UHXISo0Bo-MQ7kNvwH6hc33&_nc_oc=AdmA1VFn4Wrnuz8sTUYldOWRPImbw8n5yupFkE4BHv6ZxL-oq9Nzai7fmaMtDQQUPvY&_nc_zt=23&se=-1&_nc_ht=scontent.fcai30-1.fna&_nc_gid=K4xGoLuhx5K4i1rZ_cMmsA&oh=00_AfudIwDbytfV9Z9RWWnfuY6SuG4U_JIc-uAlCCNCPsndYA&oe=698FC0D1",  // رابط الصورة أو "" لو مفيش صورة
+            
+            // ─── الأقسام والأزرار ───
             sections: [
                 {
-                    id: "contact",
                     title: "التواصل",
                     icon: "fas fa-phone",
                     buttons: [
-                        { icon: "fas fa-phone", text: "01140567825", link: "tel:01140567825" },
-                        { icon: "fab fa-whatsapp", text: "واتساب", link: "https://wa.me/201140567825", type: "whatsapp" }
+                        { icon: "fas fa-phone", text: "01140567825", link: "tel:01140567825", type: "phone", copyable: true },
+                        { icon: "fab fa-whatsapp", text: "واتساب", link: "https://wa.me/201140567825", type: "whatsapp" },
+                        { icon: "fas fa-envelope", text: "الإيميل", link: "mailto:example@email.com" }
                     ]
                 },
                 {
-                    id: "location",
                     title: "الموقع",
                     icon: "fas fa-map-marker-alt",
                     buttons: [
@@ -333,7 +402,6 @@
                     ]
                 },
                 {
-                    id: "booking",
                     title: "حجز موعد",
                     icon: "far fa-calendar-check",
                     buttons: [
@@ -342,77 +410,108 @@
                 }
             ],
             
-            // === روابط التواصل الاجتماعي ===
+            // ─── السوشيال ميديا ───
             social: [
-                { icon: "fab fa-facebook-f", link: "https://web.facebook.com/mark.atef.587/" },
-                { icon: "fab fa-instagram", link: "https://www.instagram.com/_mark_atef_/" },
-                { icon: "fab fa-github", link: "https://github.com/A2M7U1N2" },
-                { icon: "fab fa-linkedin-in", link: "https://www.linkedin.com/in/mark-atef-796003264/" }
+                { icon: "fab fa-facebook-f", link: "https://web.facebook.com/mark.atef.587/", label: "فيسبوك" },
+                { icon: "fab fa-instagram",  link: "https://www.instagram.com/_mark_atef_/", label: "إنستجرام" },
+                { icon: "fab fa-github",     link: "https://github.com/A2M7U1N2", label: "جيت هاب" },
+                { icon: "fab fa-linkedin-in",link: "https://www.linkedin.com/in/mark-atef-796003264/", label: "لينكدإن" }
             ],
             
-            // === النص في الفوتر ===
-            footerText: "© 2026 جميع الحقوق محفوظة"
+            // ─── الفوتر ───
+            footerText: "© 2026 - جميع الحقوق محفوظة"
         };
         
-        // ==================== لا تلمس الكود تحت هذا السطر ====================
+        // ==================== UTILITY FUNCTIONS ====================
         
-        // دالة لتحميل الصورة أو استخدام البديل
-        function loadImage(url) {
-            return new Promise((resolve) => {
-                if (!url) {
-                    resolve(null);
-                    return;
-                }
-                
-                const img = new Image();
-                img.onload = () => resolve(url);
-                img.onerror = () => resolve(null);
-                img.src = url;
-            });
+        // ─── عرض إشعار مؤقت ───
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
         }
         
-        // دالة لتطبيق الألوان
+        // ─── نسخ النص إلى الحافظة ───
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text)
+                .then(() => {
+                    showToast("تم نسخ الرقم: " + text);
+                })
+                .catch(err => {
+                    console.error('Failed to copy: ', err);
+                    showToast("حدث خطأ أثناء النسخ");
+                });
+        }
+        
+        // ─── إنشاء زر ───
+        function createButton(buttonData, sectionType = '') {
+            const button = document.createElement('a');
+            button.href = buttonData.link;
+            button.className = `btn ${buttonData.type || ''}`;
+            button.target = '_blank';
+            button.rel = 'noopener noreferrer';
+            button.setAttribute('aria-label', buttonData.text);
+            
+            // إضافة زر النسخ لأرقام الهواتف
+            let copyButton = '';
+            if (buttonData.copyable) {
+                copyButton = `<button class="btn-copy" aria-label="نسخ الرقم">
+                    <i class="fas fa-copy"></i>
+                </button>`;
+            }
+            
+            button.innerHTML = `
+                <i class="${buttonData.icon}"></i>
+                <span class="btn-text">${buttonData.text}</span>
+                <i class="fas fa-arrow-left"></i>
+                ${copyButton}
+            `;
+            
+            // إضافة حدث النسخ إذا كان الزر قابلاً للنسخ
+            if (buttonData.copyable) {
+                const copyBtn = button.querySelector('.btn-copy');
+                copyBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    copyToClipboard(buttonData.text);
+                });
+            }
+            
+            return button;
+        }
+        
+        // ==================== RENDER FUNCTIONS ====================
+        
+        // ─── تطبيق الألوان ───
         function applyColors() {
             const root = document.documentElement;
-            root.style.setProperty('--primary', CONFIG.primaryColor);
-            root.style.setProperty('--primary-dark', darkenColor(CONFIG.primaryColor, 20));
-            root.style.setProperty('--secondary', CONFIG.secondaryColor);
-            root.style.setProperty('--secondary-dark', darkenColor(CONFIG.secondaryColor, 20));
+            const colors = cardData.colors;
+            
+            root.style.setProperty('--primary', colors.primary);
+            root.style.setProperty('--primary-dark', colors.primaryDark);
+            root.style.setProperty('--accent', colors.accent);
+            root.style.setProperty('--background', colors.background);
+            root.style.setProperty('--card-bg', colors.cardBackground);
+            root.style.setProperty('--text', colors.text);
+            root.style.setProperty('--text-light', colors.textLight);
         }
         
-        // دالة لتغميق اللون
-        function darkenColor(color, percent) {
-            let r = parseInt(color.slice(1, 3), 16);
-            let g = parseInt(color.slice(3, 5), 16);
-            let b = parseInt(color.slice(5, 7), 16);
-            
-            r = Math.floor(r * (100 - percent) / 100);
-            g = Math.floor(g * (100 - percent) / 100);
-            b = Math.floor(b * (100 - percent) / 100);
-            
-            return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
-        }
-        
-        // دالة لعرض الصورة
-        async function renderAvatar() {
+        // ─── عرض الصورة الشخصية ───
+        function renderAvatar() {
             const avatarDiv = document.createElement('div');
             avatarDiv.className = 'avatar';
             
-            if (CONFIG.info.image) {
-                const imageUrl = await loadImage(CONFIG.info.image);
-                if (imageUrl) {
-                    const img = document.createElement('img');
-                    img.src = imageUrl;
-                    img.alt = CONFIG.info.name;
-                    avatarDiv.appendChild(img);
-                } else {
-                    // Fallback إذا فشل تحميل الصورة
-                    const icon = document.createElement('i');
-                    icon.className = 'fas fa-user';
-                    avatarDiv.appendChild(icon);
-                }
+            if (cardData.photo) {
+                const img = document.createElement('img');
+                img.src = cardData.photo;
+                img.alt = cardData.name;
+                img.loading = 'lazy';
+                avatarDiv.appendChild(img);
             } else {
-                // بدون صورة
                 const icon = document.createElement('i');
                 icon.className = 'fas fa-user';
                 avatarDiv.appendChild(icon);
@@ -421,41 +520,39 @@
             return avatarDiv;
         }
         
-        // دالة لعرض الهيدر
-        async function renderHeader() {
+        // ─── عرض الهيدر ───
+        function renderHeader() {
             const header = document.getElementById('header');
             
-            const avatar = await renderAvatar();
-            
-            header.innerHTML = '';
-            header.appendChild(avatar);
+            const avatar = renderAvatar();
             
             const nameEl = document.createElement('h1');
             nameEl.className = 'name';
-            nameEl.textContent = CONFIG.info.name;
+            nameEl.textContent = cardData.name;
             
             const titleEl = document.createElement('div');
             titleEl.className = 'title';
-            titleEl.textContent = CONFIG.info.title;
+            titleEl.textContent = cardData.title;
             
             const descEl = document.createElement('div');
             descEl.className = 'description';
-            descEl.textContent = CONFIG.info.description;
+            descEl.textContent = cardData.description;
             
+            header.innerHTML = '';
+            header.appendChild(avatar);
             header.appendChild(nameEl);
             header.appendChild(titleEl);
             header.appendChild(descEl);
         }
         
-        // دالة لعرض الأقسام
+        // ─── عرض الأقسام ───
         function renderSections() {
             const container = document.getElementById('sections');
             container.innerHTML = '';
             
-            CONFIG.sections.forEach(section => {
+            cardData.sections.forEach(section => {
                 const sectionEl = document.createElement('div');
                 sectionEl.className = 'section';
-                sectionEl.id = `section-${section.id}`;
                 
                 const titleEl = document.createElement('div');
                 titleEl.className = 'section-title';
@@ -465,19 +562,7 @@
                 buttonsEl.className = 'buttons';
                 
                 section.buttons.forEach(button => {
-                    const btnEl = document.createElement('a');
-                    btnEl.href = button.link;
-                    btnEl.className = `btn ${button.type || ''}`;
-                    btnEl.target = '_blank';
-                    btnEl.rel = 'noopener';
-                    
-                    btnEl.innerHTML = `
-                        <i class="${button.icon}"></i>
-                        <span class="btn-text">${button.text}</span>
-                        <i class="fas fa-arrow-left"></i>
-                    `;
-                    
-                    buttonsEl.appendChild(btnEl);
+                    buttonsEl.appendChild(createButton(button, section.title));
                 });
                 
                 sectionEl.appendChild(titleEl);
@@ -486,40 +571,43 @@
             });
         }
         
-        // دالة لعرض روابط التواصل الاجتماعي
+        // ─── عرض روابط التواصل الاجتماعي ───
         function renderSocial() {
             const container = document.getElementById('social');
             container.innerHTML = '';
             
-            CONFIG.social.forEach(social => {
+            cardData.social.forEach(social => {
                 const linkEl = document.createElement('a');
                 linkEl.href = social.link;
                 linkEl.className = 'social-btn';
                 linkEl.target = '_blank';
-                linkEl.rel = 'noopener';
+                linkEl.rel = 'noopener noreferrer';
+                linkEl.setAttribute('aria-label', social.label || social.icon.replace('fab fa-', ''));
                 linkEl.innerHTML = `<i class="${social.icon}"></i>`;
                 
                 container.appendChild(linkEl);
             });
         }
         
-        // دالة لعرض الفوتر
+        // ─── عرض الفوتر ───
         function renderFooter() {
             const footer = document.getElementById('footer');
-            footer.textContent = CONFIG.footerText;
+            footer.textContent = cardData.footerText;
         }
         
-        // دالة لتهيئة التطبيق
-        async function initApp() {
-            // تطبيق الاتجاه
-            document.documentElement.dir = CONFIG.direction;
-            document.documentElement.lang = CONFIG.direction === 'rtl' ? 'ar' : 'en';
+        // ==================== INITIALIZATION ====================
+        
+        // ─── تهيئة التطبيق ───
+        function initApp() {
+            // تطبيق الاتجاه واللغة
+            document.documentElement.dir = cardData.direction;
+            document.documentElement.lang = cardData.language;
             
             // تطبيق الألوان
             applyColors();
             
             // عرض جميع المكونات
-            await renderHeader();
+            renderHeader();
             renderSections();
             renderSocial();
             renderFooter();
@@ -537,7 +625,7 @@
             }
         }
         
-        // دالة لإضافة تفاعلات اللمس
+        // ─── إضافة تفاعلات اللمس ───
         function addTouchInteractions() {
             const buttons = document.querySelectorAll('.btn, .social-btn');
             
@@ -578,27 +666,35 @@
         // بدء التطبيق عند تحميل الصفحة
         document.addEventListener('DOMContentLoaded', initApp);
         
-        // ==================== وظائف مساعدة للتوسعة ====================
+        // ==================== EXPORT FUNCTIONS ====================
+        // (للاستخدام الخارجي إذا لزم الأمر)
         
         // دالة لإضافة قسم جديد (للتوسعة)
         function addSection(sectionData) {
-            CONFIG.sections.push(sectionData);
+            cardData.sections.push(sectionData);
             renderSections();
         }
         
         // دالة لتحديث المعلومات (للتوسعة)
         function updateInfo(newInfo) {
-            CONFIG.info = { ...CONFIG.info, ...newInfo };
+            Object.assign(cardData, newInfo);
             renderHeader();
-        }
-        
-        // دالة لتغيير الألوان (للتوسعة)
-        function updateColors(primary, secondary) {
-            CONFIG.primaryColor = primary;
-            CONFIG.secondaryColor = secondary;
             applyColors();
         }
         
+        // دالة لتغيير الألوان (للتوسعة)
+        function updateColors(newColors) {
+            Object.assign(cardData.colors, newColors);
+            applyColors();
+        }
+        
+        // جعل الدوال متاحة للاستخدام من الخارج
+        window.cardManager = {
+            addSection,
+            updateInfo,
+            updateColors,
+            getData: () => cardData
+        };
     </script>
 </body>
 </html>
