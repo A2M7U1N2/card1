@@ -4,6 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Digital Card</title>
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P343LZ8Y1S"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-P343LZ8Y1S');
+    </script>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* ===== VARIABLES ===== */
@@ -286,6 +296,9 @@
         // غير كل البيانات هنا فقط! (مكان واحد للتعديل)
         
         const CONFIG = {
+            // === معرف الكارت ===
+            cardId: "card_001",
+            
             // === المظهر العام ===
             direction: "rtl", // rtl أو ltr
             primaryColor: "#005eff", // اللون الرئيسي
@@ -296,7 +309,7 @@
                 name: "م. مارك عاطف",
                 title: "طالب في كلية هندسة قسم CCE ",
                 description: "",
-                image: "https://scontent.faly1-2.fna.fbcdn.net/v/t51.82787-15/601916198_18521282161064714_3691868551651814149_n.jpg?stp=dst-jpegr_tt6&_nc_cat=106&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeFS_ut0OQsCb3arN_boOdtHHFkOVyWDZE4cWQ5XJYNkTtLW4fsO4eQYHOsA0kN__IHqbLJU4U4N9NVCsXCOpxAD&_nc_ohc=wzxCZsyGIGIQ7kNvwE6JlLX&_nc_oc=AdkhpfL4kvGMKCblYqw8GobP-TKOayhznCIWOnu4Bsde8-tsL_zJQ0JLIsljfDpEn0X1iGaqnxAeocEJSfZpiSVi&_nc_zt=23&se=-1&_nc_ht=scontent.faly1-2.fna&_nc_gid=-d_JTpdRPW4phJr5W0wiGQ&oh=00_AfvGcxm4tP0DhKgai5JTCEpkt4RcQyDYVGrehrN0Ab2YnQ&oe=69896191" // رابط الصورة
+                image: "https://scontent.fcai30-1.fna.fbcdn.net/v/t51.82787-15/601916198_18521282161064714_3691868551651814149_n.jpg?stp=dst-jpegr_tt6&_nc_cat=106&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeFS_ut0OQsCb3arN_boOdtHHFkOVyWDZE4cWQ5XJYNkTtLW4fsO4eQYHOsA0kN__IHqbLJU4U4N9NVCsXCOpxAD&_nc_ohc=UHXISo0Bo-MQ7kNvwH6hc33&_nc_oc=AdmA1VFn4Wrnuz8sTUYldOWRPImbw8n5yupFkE4BHv6ZxL-oq9Nzai7fmaMtDQQUPvY&_nc_zt=23&se=-1&_nc_ht=scontent.fcai30-1.fna&_nc_gid=K4xGoLuhx5K4i1rZ_cMmsA&oh=00_AfudIwDbytfV9Z9RWWnfuY6SuG4U_JIc-uAlCCNCPsndYA&oe=698FC0D1" // رابط الصورة
                 // image: false // ضع false إذا بدون صورة
             },
             
@@ -513,6 +526,15 @@
             
             // إضافة تفاعلات اللمس
             addTouchInteractions();
+            
+            // إرسال حدث للـ Google Analytics
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'page_view', {
+                    'page_title': document.title,
+                    'page_location': window.location.href,
+                    'page_path': window.location.pathname
+                });
+            }
         }
         
         // دالة لإضافة تفاعلات اللمس
@@ -526,6 +548,29 @@
                 
                 btn.addEventListener('touchend', function() {
                     this.style.transform = '';
+                });
+                
+                // تتبع النقرات في Google Analytics
+                btn.addEventListener('click', function() {
+                    if (typeof gtag !== 'undefined') {
+                        let buttonLabel = '';
+                        
+                        // الحصول على نص الزر
+                        const btnText = this.querySelector('.btn-text');
+                        if (btnText) {
+                            buttonLabel = btnText.textContent;
+                        } else {
+                            const icon = this.querySelector('i');
+                            buttonLabel = icon ? icon.className.replace('fab fa-', '').replace('fas fa-', '').replace('far fa-', '') : 'button';
+                        }
+                        
+                        // إرسال حدث النقر
+                        gtag('event', 'click', {
+                            'event_category': 'engagement',
+                            'event_label': buttonLabel,
+                            'value': 1
+                        });
+                    }
                 });
             });
         }
@@ -554,24 +599,6 @@
             applyColors();
         }
         
-        // أمثلة للاستخدام (يمكن حذفها):
-        /*
-        // إضافة قسم جديد:
-        addSection({
-            id: "website",
-            title: "الموقع الإلكتروني",
-            icon: "fas fa-globe",
-            buttons: [
-                { icon: "fas fa-globe", text: "زيارة الموقع", link: "https://example.com" }
-            ]
-        });
-        
-        // تحديث الاسم:
-        updateInfo({ name: "شركة التقنية المتطورة" });
-        
-        // تغيير الألوان:
-        updateColors("#8b5cf6", "#ec4899");
-        */
     </script>
 </body>
 </html>
