@@ -2,958 +2,300 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digital Card</title>
-    
-    <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P343LZ8Y1S"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-P343LZ8Y1S');
-    </script>
-    
-    <!-- Font Awesome (نسخة مخففة) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Mark Atef • Cardvia</title>
+    <!-- Tailwind + Font Awesome (تم إزالة مكتبة QR) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* ===== VARIABLES ===== */
-        :root {
-            /* الألوان - ستتم تعبئتها ديناميكيًا من JavaScript */
-            --primary: #005eff;
-            --primary-dark: #003399;
-            --accent: #10b981;
-            --contact-color: #6c63ff;
-            --contact-hover: #554fd8;
-            --background: #f8fafc;
-            --card-bg: #ffffff;
-            --text: #1e293b;
-            --text-light: #64748b;
-            
-            /* التنسيقات */
-            --radius: 20px;
-            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            --transition: all 0.3s ease;
-        }
-        
-        /* ===== DARK MODE ===== */
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --background: #0f172a;
-                --card-bg: #1e293b;
-                --text: #f1f5f9;
-                --text-light: #94a3b8;
-                --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-                --contact-color: #7b73ff;
-                --contact-hover: #665fe6;
-            }
-            
-            .btn {
-                background: #334155;
-            }
-            
-            .social-btn {
-                background: #334155;
-            }
-        }
-        
-        /* ===== REDUCED MOTION ===== */
-        @media (prefers-reduced-motion: reduce) {
-            *,
-            *::before,
-            *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-                scroll-behavior: auto !important;
-            }
-            
-            .btn:hover,
-            .btn:active,
-            .social-btn:hover {
-                transform: none !important;
-            }
-        }
-        
-        /* ===== RESET & BASE ===== */
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--background);
-            color: var(--text);
-            min-height: 100vh;
-            padding: 20px;
-            line-height: 1.6;
-            transition: background-color 0.3s ease, color 0.3s ease;
+        .glass-card {
+            background: rgba(24, 24, 27, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
-        
-        /* ===== CARD ===== */
-        .card {
-            max-width: 420px;
-            margin: 0 auto;
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            overflow: hidden;
-            padding: 30px;
-            transition: var(--transition);
+        .social-icon {
+            transition: all 0.2s ease;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
-        
-        /* ===== HEADER ===== */
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
+        .social-icon:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.2);
         }
-        
-        .avatar {
-            width: 140px;
-            height: 140px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 5px solid var(--primary);
-            margin: 0 auto 20px;
-            background: var(--background);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 48px;
-            color: var(--primary);
-            overflow: hidden;
-        }
-        
-        .avatar img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-        
-        .avatar i {
-            font-size: 48px;
-        }
-        
-        .name {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--text);
-            margin-bottom: 5px;
-        }
-        
-        .title {
-            font-size: 1.1rem;
-            color: var(--primary);
-            margin-bottom: 15px;
-            font-weight: 600;
-        }
-        
-        .description {
-            color: var(--text-light);
-            font-size: 0.95rem;
-            max-width: 320px;
-            margin: 0 auto;
-        }
-        
-        /* ===== SECTIONS ===== */
-        .section {
-            margin-bottom: 25px;
-        }
-        
-        .section-title {
-            font-size: 1rem;
-            color: var(--text);
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 600;
-        }
-        
-        .section-title i {
-            color: var(--primary);
-        }
-        
-        /* ===== BUTTONS ===== */
-        .buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        
-        .btn {
-            display: flex;
-            align-items: center;
-            padding: 16px 20px;
-            background: #f1f5f9;
-            border-radius: 12px;
-            text-decoration: none;
-            color: var(--text);
-            transition: var(--transition);
-            border: 2px solid transparent;
-            cursor: pointer;
-        }
-        
-        .btn:hover, .btn:active {
-            background: var(--primary);
-            color: white;
-            transform: translateX(-5px);
-        }
-        
-        .btn:hover i, .btn:active i {
-            color: white;
-        }
-        
-        .btn i {
-            width: 24px;
-            font-size: 1.2rem;
-            color: var(--primary);
-            transition: var(--transition);
-        }
-        
-        .btn-text {
-            flex: 1;
-            font-weight: 500;
-        }
-        
-        .btn .fa-arrow-left {
-            font-size: 0.9rem;
-            opacity: 0.7;
-        }
-        
-        .btn-copy {
-            margin-left: 10px;
-            background: transparent;
-            border: none;
-            color: var(--primary);
-            cursor: pointer;
-            padding: 5px;
-            border-radius: 4px;
-            transition: background-color 0.2s;
-        }
-        
-        .btn-copy:hover {
-            background: rgba(0, 94, 255, 0.1);
-        }
-        
-        /* ===== زر حفظ الرقم - تنسيق محسن ===== */
-        .save-contact .btn {
-            background: linear-gradient(135deg, var(--contact-color) 0%, var(--contact-hover) 100%);
-            color: white;
-            border: none;
-            font-weight: 600;
+        .btn-shine {
             position: relative;
             overflow: hidden;
         }
-        
-        .save-contact .btn i {
-            color: white;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-        
-        .save-contact .btn .btn-text {
-            /* font-weight: 600; */ /* تم إزالته لضمان تطابق الخط */
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-        }
-        
-        .save-contact .btn:hover, .save-contact .btn:active {
-            background: linear-gradient(135deg, var(--contact-hover) 0%, var(--contact-color) 100%);
-            color: white;
-            transform: translateX(-5px) scale(1.02);
-            box-shadow: 0 5px 15px rgba(108, 99, 255, 0.3);
-        }
-        
-        .save-contact .btn:before {
+        .btn-shine::after {
             content: '';
             position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: 0.5s;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s ease;
+            opacity: 0;
         }
-        
-        .save-contact .btn:hover:before {
+        .btn-shine:hover::after {
+            opacity: 1;
             left: 100%;
         }
-        
-        /* ===== SOCIAL ===== */
-        .social {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 20px;
-        }
-        
-        .social-btn {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #f1f5f9;
-            color: var(--text);
-            font-size: 1.2rem;
-            text-decoration: none;
-            transition: var(--transition);
-        }
-        
-        .social-btn:hover {
-            background: var(--primary);
-            color: white;
-            transform: translateY(-3px);
-        }
-        
-        /* ===== WHATSAPP SPECIAL ===== */
-        .whatsapp .btn {
-            background: #25d366;
-            color: white;
-            border: none;
-        }
-        
-        .whatsapp .btn i {
-            color: white;
-        }
-        
-        .whatsapp .btn:hover {
-            background: #128c7e;
-        }
-        
-        /* ===== FOOTER ===== */
-        .footer {
-            text-align: center;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #e2e8f0;
-            color: var(--text-light);
-            font-size: 0.85rem;
-        }
-        
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 480px) {
-            .card {
-                padding: 25px 20px;
-            }
-            
-            .avatar {
-                width: 120px;
-                height: 120px;
-            }
-            
-            .name {
-                font-size: 1.6rem;
-            }
-            
-            .btn {
-                padding: 14px 16px;
-            }
-            
-            .save-contact .btn {
-                padding: 15px 18px;
-            }
-        }
-        
-        /* ===== LTR SUPPORT ===== */
-        [dir="ltr"] .btn:hover {
-            transform: translateX(5px);
-        }
-        
-        [dir="ltr"] .save-contact .btn:hover {
-            transform: translateX(5px) scale(1.02);
-        }
-        
-        [dir="ltr"] .btn .fa-arrow-left {
-            transform: rotate(180deg);
-        }
-        
-        [dir="ltr"] body {
-            text-align: left;
-        }
-        
-        /* ===== TOAST NOTIFICATION ===== */
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--primary);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            z-index: 1000;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        
-        .toast.show {
-            opacity: 1;
-        }
-        
-        /* ===== MODAL للاسم ===== */
-        .contact-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .contact-modal.show {
-            display: flex;
-        }
-        
-        .modal-content {
-            background: var(--card-bg);
-            padding: 30px;
-            border-radius: var(--radius);
-            max-width: 400px;
-            width: 90%;
-            box-shadow: var(--shadow);
-        }
-        
-        .modal-title {
-            font-size: 1.2rem;
-            color: var(--primary);
-            margin-bottom: 15px;
-            text-align: center;
-        }
-        
-        .modal-input {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
-            font-size: 1rem;
-            margin-bottom: 20px;
-            transition: var(--transition);
-        }
-        
-        .modal-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(0, 94, 255, 0.1);
-        }
-        
-        .modal-actions {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .modal-btn {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        
-        .modal-btn.primary {
-            background: var(--primary);
-            color: white;
-        }
-        
-        .modal-btn.primary:hover {
-            background: var(--primary-dark);
-        }
-        
-        .modal-btn.secondary {
-            background: #f1f5f9;
-            color: var(--text);
-        }
-        
-        .modal-btn.secondary:hover {
-            background: #e2e8f0;
+        button, a {
+            -webkit-tap-highlight-color: transparent;
         }
     </style>
 </head>
-<body>
-    <div class="card" id="digitalCard">
-        <!-- Header -->
-        <div class="header" id="header"></div>
-        
-        <!-- Sections will be dynamically added here -->
-        <div id="sections"></div>
-        
-        <!-- Social Media -->
-        <div class="social" id="social"></div>
-        
-        <!-- Footer -->
-        <div class="footer" id="footer"></div>
-    </div>
+<body class="bg-zinc-950 text-white min-h-screen flex items-center justify-center p-4">
+    <!-- خلفية متدرجة -->
+    <div class="fixed inset-0 bg-gradient-to-br from-zinc-900 via-zinc-950 to-black -z-10"></div>
     
-    <!-- Toast Notification -->
-    <div class="toast" id="toast"></div>
-    
-    <!-- Modal for Contact Name -->
-    <div class="contact-modal" id="contactModal">
-        <div class="modal-content">
-            <div class="modal-title">
-                <i class="fas fa-user-plus" style="margin-left: 8px;"></i>
-                إدخال اسم جهة الاتصال
+    <div class="max-w-md w-full mx-auto relative">
+        <!-- البطاقة الرئيسية -->
+        <div class="glass-card rounded-[2rem] overflow-hidden shadow-2xl border border-white/5">
+            <!-- Cover + Avatar -->
+            <div class="relative h-56 bg-cover bg-center" id="coverBg"
+                 style="background-image: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070&auto=format&fit=crop')">
+                <div class="absolute inset-0 bg-gradient-to-b from-black/20 via-zinc-900/70 to-zinc-900"></div>
+                
+                <!-- Avatar -->
+                <div class="absolute left-1/2 -translate-x-1/2 w-36 h-36 rounded-[2rem] overflow-hidden border-[6px] border-zinc-900 shadow-2xl" style="bottom: -4.5rem;">
+                    <img id="profileImg" src="https://ik.imagekit.io/fojb8puzo/587561236_18521282191064714_539670380412377_n.jpg" 
+                         class="w-full h-full object-cover" alt="Mark Atef" onerror="this.src='https://via.placeholder.com/200?text=Mark'">
+                </div>
             </div>
-            <input type="text" 
-                   id="contactNameInput" 
-                   class="modal-input" 
-                   placeholder="أدخل اسم جهة الاتصال..."
-                   maxlength="30">
-            <div class="modal-actions">
-                <button class="modal-btn secondary" id="cancelBtn">إلغاء</button>
-                <button class="modal-btn primary" id="confirmBtn">حفظ الرقم</button>
+
+            <div class="pt-24 pb-8 px-6">
+                <!-- Name & Title -->
+                <div class="text-center">
+                    <h1 id="fullName" class="text-4xl font-bold tracking-tight bg-gradient-to-r from-white to-zinc-300 bg-clip-text text-transparent">Mark Atef</h1>
+                    <p id="title" class="text-zinc-400 mt-1 text-lg font-light">Founder of Cardvia • CCE Engineering Student</p>
+                </div>
+
+                <!-- Bio -->
+                <p id="bio" class="text-center text-zinc-300 mt-6 text-[15px] leading-relaxed">
+                    طالب هندسة حاسبات و اتصالات | مؤسس Cardvia
+                </p>
+
+                <!-- Main Buttons -->
+                <div id="mainButtons" class="mt-10 space-y-3"></div>
+
+                <!-- Social -->
+                <div class="mt-10">
+                    <p class="text-xs uppercase tracking-widest text-zinc-500 text-center mb-4">تابعني</p>
+                    <div id="socialButtons" class="grid grid-cols-4 gap-3"></div>
+                </div>
+
+                <!-- Footer with QR and Share -->
+                <div class="mt-12 flex items-center justify-between text-xs">
+                    <button id="showQrBtn" class="flex items-center gap-2 px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 transition border border-white/10 active:scale-95 text-zinc-300" aria-label="عرض رمز QR">
+                        <i class="fas fa-qrcode text-sm"></i>
+                        <span>QR</span>
+                    </button>
+                    
+                    <div class="text-white font-medium">
+                        POWERED BY CARDVIA
+                    </div>
+                    
+                    <button id="shareBtn" class="flex items-center gap-2 px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 transition border border-white/10 active:scale-95 text-zinc-300" aria-label="مشاركة الصفحة">
+                        <i class="fas fa-share-alt text-sm"></i>
+                        <span>مشاركة</span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
+    <!-- QR Modal (يستخدم صورة ثابتة) -->
+    <div id="overlay" class="hidden fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-label="رمز QR">
+        <div class="glass rounded-[2rem] p-8 w-full max-w-xs mx-4 text-center border border-white/20 shadow-2xl">
+            <p class="text-lg font-medium mb-6 text-white">امسح الـ QR عشان تربط الصفحة</p>
+            <div id="qrContainer" class="mx-auto bg-white p-4 rounded-2xl inline-block min-h-[240px] min-w-[240px] flex items-center justify-center">
+                <!-- الصورة الثابتة لرمز QR (قم بتغيير الرابط إلى رابط الصورة الخاصة بك) -->
+                <img src="https://ik.imagekit.io/fojb8puzo/qr-code__4_-removebg-preview.png" alt="QR Code" class="rounded-xl shadow-lg w-full h-auto">
+            </div>
+            <button id="closeQr" class="mt-8 w-full py-4 bg-white text-zinc-900 font-bold rounded-2xl text-sm tracking-wider hover:bg-zinc-200 transition btn-shine relative overflow-hidden">
+                إغلاق
+            </button>
+        </div>
+    </div>
+
     <script>
-        // ==================== CONFIGURATION ====================
-        const cardData = {
-            colors: {
-                primary: "#005eff",
-                primaryDark: "#003399",
-                accent: "#10b981",
-                contactColor: "#6c63ff",
-                contactHover: "#554fd8",
-                background: "#f8fafc",
-                cardBackground: "#ffffff",
-                text: "#1e293b",
-                textLight: "#64748b"
-            },
-            
-            direction: "rtl",
-            language: "ar",
-            
-            name: "م. مارك عاطف",
-            title: "طالب في كلية هندسة قسم CCE",
-            description: "",
-            photo: "https://scontent.fcai30-1.fna.fbcdn.net/v/t51.82787-15/601916198_18521282161064714_3691868551651814149_n.jpg?stp=dst-jpegr_tt6&_nc_cat=106&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeFS_ut0OQsCb3arN_boOdtHHFkOVyWDZE4cWQ5XJYNkTtLW4fsO4eQYHOsA0kN__IHqbLJU4U4N9NVCsXCOpxAD&_nc_ohc=UHXISo0Bo-MQ7kNvwH6hc33&_nc_oc=AdmA1VFn4Wrnuz8sTUYldOWRPImbw8n5yupFkE4BHv6ZxL-oq9Nzai7fmaMtDQQUPvY&_nc_zt=23&se=-1&_nc_ht=scontent.fcai30-1.fna&_nc_gid=K4xGoLuhx5K4i1rZ_cMmsA&oh=00_AfudIwDbytfV9Z9RWWnfuY6SuG4U_JIc-uAlCCNCPsndYA&oe=698FC0D1",
-            
-            sections: [
-                {
-                    title: "التواصل",
-                    icon: "fas fa-phone",
-                    buttons: [
-                        { icon: "fas fa-phone", text: "01140567825", link: "tel:01140567825", type: "phone", copyable: true },
-                        { icon: "fab fa-whatsapp", text: "واتساب", link: "https://wa.me/201140567825", type: "whatsapp" },
-                        { icon: "fas fa-envelope", text: "الإيميل", link: "mailto:markatf219@gmail.com" },
-                        { 
-                            icon: "fas fa-address-book", 
-                            text: "حفظ الرقم في جهات الاتصال",
-                            type: "save-contact"
-                        }
-                    ]
-                },
-                {
-                    title: "الموقع",
-                    icon: "fas fa-map-marker-alt",
-                    buttons: [
-                        { icon: "fas fa-map-marker-alt", text: "شارع 608 متفرع من سيدي بشر قبلي", link: "https://maps.app.goo.gl/wYrVUAerz1EjdotB7" }
-                    ]
-                },
-                {
-                    title: "حجز موعد",
-                    icon: "far fa-calendar-check",
-                    buttons: [
-                        { icon: "far fa-calendar-check", text: "احجز موعدك الآن", link: "https://calendly.com/markatef219" }
-                    ]
+        (function() {
+            const CONFIG = {
+                fullName: "Mark Atef",
+                title: "Founder of Cardvia • CCE Engineering Student",
+                bio: "طالب هندسة حاسبات و اتصالات | مؤسس Cardvia",
+                profileImage: "https://ik.imagekit.io/fojb8puzo/587561236_18521282191064714_539670380412377_n.jpg",
+                coverImage: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070&auto=format&fit=crop",
+                mainButtons: [
+                    { icon: "fas fa-phone", label: "اتصل الآن", url: "tel:+201140567825", color: "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20" },
+                    { icon: "fab fa-whatsapp", label: "واتساب", url: "https://wa.me/201140567825", color: "bg-green-500/10 text-green-400 border border-green-500/20 hover:bg-green-500/20" },
+                    { icon: "fas fa-envelope", label: "الإيميل", url: "mailto:markatef219@gmail.com", color: "bg-blue-500/10 text-blue-400 border border-blue-500/20 hover:bg-blue-500/20" },
+                    { icon: "fas fa-download", label: "حفظ في الجهات", url: "#", type: "save-contact", color: "bg-purple-500/10 text-purple-400 border border-purple-500/20 hover:bg-purple-500/20" }
+                ],
+                socials: [
+                    { icon: "fab fa-facebook-f", url: "https://web.facebook.com/mark.atef.587/", color: "text-blue-400" },
+                    { icon: "fab fa-instagram", url: "https://www.instagram.com/_mark_atef_/", color: "text-pink-400" },
+                    { icon: "fab fa-linkedin-in", url: "https://www.linkedin.com/in/mark-atef-796003264/", color: "text-sky-400" },
+                    { icon: "fab fa-github", url: "https://github.com/A2M7U1N2", color: "text-white" }
+                ],
+                vCard: {
+                    firstName: "Mark",
+                    lastName: "Atef",
+                    organization: "Cardvia",
+                    title: "Founder & Engineer",
+                    phone: "+201140567825",
+                    email: "markatef219@gmail.com"
                 }
-            ],
-            
-            social: [
-                { icon: "fab fa-facebook-f", link: "https://web.facebook.com/mark.atef.587/", label: "فيسبوك" },
-                { icon: "fab fa-instagram",  link: "https://www.instagram.com/_mark_atef_/", label: "إنستجرام" },
-                { icon: "fab fa-github",     link: "https://github.com/A2M7U1N2", label: "جيت هاب" },
-                { icon: "fab fa-linkedin-in",link: "https://www.linkedin.com/in/mark-atef-796003264/", label: "لينكدإن" }
-            ],
-            
-            footerText: "© 2026 - جميع الحقوق محفوظة"
-        };
-        
-        // ==================== UTILITY FUNCTIONS ====================
-        
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.classList.add('show');
-            
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
-        }
-        
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText(text)
-                .then(() => {
-                    showToast("تم نسخ الرقم: " + text);
-                })
-                .catch(err => {
-                    console.error('Failed to copy: ', err);
-                    showToast("حدث خطأ أثناء النسخ");
-                });
-        }
-        
-        // ==================== CONTACT SAVING FUNCTIONS ====================
-        
-        function showContactModal() {
-            const modal = document.getElementById('contactModal');
-            const input = document.getElementById('contactNameInput');
-            
-            // تعيين القيمة الافتراضية
-            input.value = cardData.name;
-            
-            // عرض المودال
-            modal.classList.add('show');
-            
-            // تركيز على حقل الإدخال
-            setTimeout(() => {
-                input.focus();
-                input.select();
-            }, 100);
-        }
-        
-        function hideContactModal() {
-            const modal = document.getElementById('contactModal');
-            modal.classList.remove('show');
-        }
-        
-        function saveContactToPhone(contactName) {
-            // الحصول على رقم الهاتف
-            const phoneButton = cardData.sections[0].buttons.find(btn => btn.type === 'phone');
-            const phoneNumber = phoneButton ? phoneButton.text : '';
-            
-            if (!phoneNumber) {
-                showToast("لم يتم العثور على رقم الهاتف");
-                return;
-            }
-            
-            if (!contactName) {
-                showToast("الرجاء إدخال اسم جهة الاتصال");
-                return;
-            }
-            
-            // إنشاء vCard
-            const cleanPhone = phoneNumber.replace(/\D/g, '');
-            const vCardData = `BEGIN:VCARD
-VERSION:3.0
-FN:${contactName}
-TEL;TYPE=CELL,VOICE:${cleanPhone}
-END:VCARD`;
-            
-            // إنشاء ملف للتحميل
-            const blob = new Blob([vCardData], { type: 'text/vcard;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `${contactName.replace(/\s+/g, '_')}.vcf`;
-            link.style.display = 'none';
-            
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-            // تحرير الذاكرة
-            setTimeout(() => URL.revokeObjectURL(url), 100);
-            
-            showToast(`تم إنشاء ملف جهة الاتصال: ${contactName}`);
-            
-            // إرسال حدث لـ Google Analytics
-            if (typeof gtag !== 'undefined') {
-                gtag('event', 'save_contact', {
-                    'event_category': 'engagement',
-                    'event_label': 'حفظ الرقم',
-                    'value': 1
-                });
-            }
-        }
-        
-        // ==================== EVENT LISTENERS ====================
-        
-        function setupEventListeners() {
-            // زر الإلغاء في المودال
-            document.getElementById('cancelBtn').addEventListener('click', hideContactModal);
-            
-            // زر التأكيد في المودال
-            document.getElementById('confirmBtn').addEventListener('click', () => {
-                const contactName = document.getElementById('contactNameInput').value.trim();
-                hideContactModal();
-                
-                if (contactName) {
-                    saveContactToPhone(contactName);
-                }
-            });
-            
-            // السماح بالضغط على Enter في حقل الإدخال
-            document.getElementById('contactNameInput').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    document.getElementById('confirmBtn').click();
-                }
-            });
-            
-            // إغلاق المودال عند النقر خارج المحتوى
-            document.getElementById('contactModal').addEventListener('click', (e) => {
-                if (e.target.classList.contains('contact-modal')) {
-                    hideContactModal();
-                }
-            });
-        }
-        
-        // ==================== BUTTON CREATION ====================
-        
-        function createButton(buttonData, sectionType = '') {
-            if (buttonData.type === 'save-contact') {
-                // استخدام <a> بدلاً من <button> لضمان نفس خصائص الخط
-                const button = document.createElement('a');
-                button.href = "javascript:void(0)";
-                button.className = `btn ${buttonData.type || ''}`;
-                button.setAttribute('aria-label', buttonData.text);
-                button.setAttribute('role', 'button'); // للحفاظ على سلوك زر لإمكانية الوصول
-                
-                button.innerHTML = `
-                    <i class="${buttonData.icon}"></i>
-                    <span class="btn-text">${buttonData.text}</span>
-                    <i class="fas fa-arrow-left"></i>
-                `;
-                
-                button.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    showContactModal();
-                });
-                
-                return button;
-            }
-            
-            // باقي الأزرار العادية
-            const button = document.createElement('a');
-            button.href = buttonData.link;
-            button.className = `btn ${buttonData.type || ''}`;
-            
-            if (buttonData.link && !buttonData.link.startsWith('tel:')) {
-                button.target = '_blank';
-                button.rel = 'noopener noreferrer';
-            }
-            
-            button.setAttribute('aria-label', buttonData.text);
-            
-            let copyButton = '';
-            if (buttonData.copyable) {
-                copyButton = `<button class="btn-copy" aria-label="نسخ الرقم">
-                    <i class="fas fa-copy"></i>
-                </button>`;
-            }
-            
-            button.innerHTML = `
-                <i class="${buttonData.icon}"></i>
-                <span class="btn-text">${buttonData.text}</span>
-                <i class="fas fa-arrow-left"></i>
-                ${copyButton}
-            `;
-            
-            if (buttonData.copyable) {
-                const copyBtn = button.querySelector('.btn-copy');
-                copyBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    copyToClipboard(buttonData.text);
-                });
-            }
-            
-            return button;
-        }
-        
-        // ==================== RENDER FUNCTIONS ====================
-        
-        function applyColors() {
-            const root = document.documentElement;
-            const colors = cardData.colors;
-            
-            root.style.setProperty('--primary', colors.primary);
-            root.style.setProperty('--primary-dark', colors.primaryDark);
-            root.style.setProperty('--accent', colors.accent);
-            root.style.setProperty('--contact-color', colors.contactColor);
-            root.style.setProperty('--contact-hover', colors.contactHover);
-            root.style.setProperty('--background', colors.background);
-            root.style.setProperty('--card-bg', colors.cardBackground);
-            root.style.setProperty('--text', colors.text);
-            root.style.setProperty('--text-light', colors.textLight);
-        }
-        
-        function renderAvatar() {
-            const avatarDiv = document.createElement('div');
-            avatarDiv.className = 'avatar';
-            
-            if (cardData.photo) {
-                const img = document.createElement('img');
-                img.src = cardData.photo;
-                img.alt = cardData.name;
-                img.loading = 'lazy';
-                avatarDiv.appendChild(img);
-            } else {
-                const icon = document.createElement('i');
-                icon.className = 'fas fa-user';
-                avatarDiv.appendChild(icon);
-            }
-            
-            return avatarDiv;
-        }
-        
-        function renderHeader() {
-            const header = document.getElementById('header');
-            
-            const avatar = renderAvatar();
-            
-            const nameEl = document.createElement('h1');
-            nameEl.className = 'name';
-            nameEl.textContent = cardData.name;
-            
-            const titleEl = document.createElement('div');
-            titleEl.className = 'title';
-            titleEl.textContent = cardData.title;
-            
-            const descEl = document.createElement('div');
-            descEl.className = 'description';
-            descEl.textContent = cardData.description;
-            
-            header.innerHTML = '';
-            header.appendChild(avatar);
-            header.appendChild(nameEl);
-            header.appendChild(titleEl);
-            header.appendChild(descEl);
-        }
-        
-        function renderSections() {
-            const container = document.getElementById('sections');
-            container.innerHTML = '';
-            
-            cardData.sections.forEach(section => {
-                const sectionEl = document.createElement('div');
-                sectionEl.className = 'section';
-                
-                const titleEl = document.createElement('div');
-                titleEl.className = 'section-title';
-                titleEl.innerHTML = `<i class="${section.icon}"></i> ${section.title}`;
-                
-                const buttonsEl = document.createElement('div');
-                buttonsEl.className = 'buttons';
-                
-                section.buttons.forEach(button => {
-                    buttonsEl.appendChild(createButton(button, section.title));
-                });
-                
-                sectionEl.appendChild(titleEl);
-                sectionEl.appendChild(buttonsEl);
-                container.appendChild(sectionEl);
-            });
-        }
-        
-        function renderSocial() {
-            const container = document.getElementById('social');
-            container.innerHTML = '';
-            
-            cardData.social.forEach(social => {
-                const linkEl = document.createElement('a');
-                linkEl.href = social.link;
-                linkEl.className = 'social-btn';
-                linkEl.target = '_blank';
-                linkEl.rel = 'noopener noreferrer';
-                linkEl.setAttribute('aria-label', social.label || social.icon.replace('fab fa-', ''));
-                linkEl.innerHTML = `<i class="${social.icon}"></i>`;
-                
-                container.appendChild(linkEl);
-            });
-        }
-        
-        function renderFooter() {
-            const footer = document.getElementById('footer');
-            footer.textContent = cardData.footerText;
-        }
-        
-        // ==================== INITIALIZATION ====================
-        
-        function initApp() {
-            document.documentElement.dir = cardData.direction;
-            document.documentElement.lang = cardData.language;
-            
-            applyColors();
-            renderHeader();
-            renderSections();
-            renderSocial();
-            renderFooter();
-            setupEventListeners();
-            addTouchInteractions();
-            
-            if (typeof gtag !== 'undefined') {
-                gtag('event', 'page_view', {
-                    'page_title': document.title,
-                    'page_location': window.location.href,
-                    'page_path': window.location.pathname
-                });
-            }
-        }
-        
-        function addTouchInteractions() {
-            const buttons = document.querySelectorAll('.btn, .social-btn');
-            
-            buttons.forEach(btn => {
-                btn.addEventListener('touchstart', function() {
-                    this.style.transform = 'scale(0.95)';
-                });
-                
-                btn.addEventListener('touchend', function() {
-                    this.style.transform = '';
-                });
-                
-                if (typeof gtag !== 'undefined') {
-                    btn.addEventListener('click', function() {
-                        let buttonLabel = '';
-                        const btnText = this.querySelector('.btn-text');
-                        if (btnText) {
-                            buttonLabel = btnText.textContent;
-                        } else {
-                            const icon = this.querySelector('i');
-                            buttonLabel = icon ? icon.className.replace('fab fa-', '').replace('fas fa-', '').replace('far fa-', '') : 'button';
-                        }
-                        
-                        gtag('event', 'click', {
-                            'event_category': 'engagement',
-                            'event_label': buttonLabel,
-                            'value': 1
+                // ملاحظة: تم إزالة إعدادات QR لأننا نستخدم صورة ثابتة
+            };
+
+            // تهيئة العناصر الأساسية
+            document.getElementById('fullName').textContent = CONFIG.fullName;
+            document.getElementById('title').textContent = CONFIG.title;
+            document.getElementById('bio').textContent = CONFIG.bio;
+            document.getElementById('profileImg').src = CONFIG.profileImage;
+            document.getElementById('coverBg').style.backgroundImage = `url('${CONFIG.coverImage}')`;
+
+            // معالجة فشل صورة الغلاف
+            const coverBg = document.getElementById('coverBg');
+            const img = new Image();
+            img.src = CONFIG.coverImage;
+            img.onerror = () => {
+                coverBg.style.backgroundImage = "url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070&auto=format&fit=crop')";
+            };
+
+            // عرض الأزرار الرئيسية
+            function renderMainButtons() {
+                const container = document.getElementById('mainButtons');
+                container.innerHTML = '';
+                CONFIG.mainButtons.forEach(btn => {
+                    const a = document.createElement('a');
+                    a.href = btn.url !== "#" ? btn.url : "#";
+                    a.className = `flex items-center gap-4 ${btn.color} backdrop-blur-sm px-6 py-4 rounded-2xl text-white font-medium text-lg transition-all hover:scale-[1.02] active:scale-[0.98]`;
+                    a.setAttribute('role', 'button');
+                    if (btn.url.startsWith('http')) a.setAttribute('target', '_blank');
+                    a.innerHTML = `
+                        <i class="${btn.icon} text-2xl w-8"></i>
+                        <span class="flex-1">${btn.label}</span>
+                        <i class="fas fa-chevron-left opacity-50 text-sm"></i>
+                    `;
+
+                    if (btn.type === "save-contact") {
+                        a.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            saveContact();
                         });
+                    }
+                    container.appendChild(a);
+                });
+            }
+
+            // عرض أيقونات السوشيال
+            function renderSocials() {
+                const container = document.getElementById('socialButtons');
+                container.innerHTML = '';
+                CONFIG.socials.forEach(s => {
+                    const a = document.createElement('a');
+                    a.href = s.url;
+                    a.target = "_blank";
+                    a.rel = "noopener noreferrer";
+                    a.className = `flex items-center justify-center p-4 rounded-2xl social-icon ${s.color} hover:scale-110 transition`;
+                    a.setAttribute('aria-label', `تابع على ${s.icon.replace('fab fa-', '')}`);
+                    a.innerHTML = `<i class="${s.icon} text-2xl"></i>`;
+                    container.appendChild(a);
+                });
+            }
+
+            // حفظ جهة الاتصال
+            function saveContact() {
+                const vc = CONFIG.vCard;
+                const vcard = `BEGIN:VCARD
+VERSION:3.0
+N:${vc.lastName};${vc.firstName};;;
+FN:${vc.firstName} ${vc.lastName}
+ORG:${vc.organization}
+TITLE:${vc.title}
+TEL;TYPE=CELL,VOICE:${vc.phone}
+EMAIL;TYPE=WORK:${vc.email}
+END:VCARD`;
+
+                const blob = new Blob([vcard], { type: 'text/vcard' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `${vc.firstName}_${vc.lastName}.vcf`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+                alert('تم تحميل ملف جهة الاتصال. افتح الملف لإضافته إلى جهات الاتصال.');
+            }
+
+            // QR Modal - مجرد إظهار وإخفاء (الصورة ثابتة)
+            const overlay = document.getElementById('overlay');
+            const showQrBtn = document.getElementById('showQrBtn');
+            const closeQrBtn = document.getElementById('closeQr');
+
+            function showQR() {
+                overlay.classList.remove('hidden');
+            }
+
+            function hideQR() {
+                overlay.classList.add('hidden');
+            }
+
+            showQrBtn.addEventListener('click', showQR);
+            closeQrBtn.addEventListener('click', hideQR);
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) hideQR();
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && !overlay.classList.contains('hidden')) hideQR();
+            });
+
+            // مشاركة الصفحة
+            const shareBtn = document.getElementById('shareBtn');
+            shareBtn.addEventListener('click', () => {
+                if (navigator.share) {
+                    navigator.share({
+                        title: CONFIG.fullName,
+                        text: CONFIG.bio,
+                        url: window.location.href
+                    }).catch((error) => {
+                        if (error.name !== 'AbortError') {
+                            console.error('مشاركة فشلت:', error);
+                            fallbackCopy();
+                        }
                     });
+                } else {
+                    fallbackCopy();
                 }
             });
-        }
-        
-        document.addEventListener('DOMContentLoaded', initApp);
-        
-        // ==================== EXPORT FUNCTIONS ====================
-        window.cardManager = {
-            addSection: (sectionData) => {
-                cardData.sections.push(sectionData);
-                renderSections();
-            },
-            updateInfo: (newInfo) => {
-                Object.assign(cardData, newInfo);
-                renderHeader();
-                applyColors();
-            },
-            updateColors: (newColors) => {
-                Object.assign(cardData.colors, newColors);
-                applyColors();
-            },
-            getData: () => cardData
-        };
+
+            function fallbackCopy() {
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                    alert('✅ تم نسخ الرابط! يمكنك مشاركته الآن.');
+                }).catch(() => {
+                    prompt('انسخ الرابط يدويًا:', window.location.href);
+                });
+            }
+
+            // تشغيل كل شيء
+            renderMainButtons();
+            renderSocials();
+
+            console.log('%c✅ Cardvia - مع QR صورة ثابتة', 'color:#10b981; font-size:16px; font-weight:bold');
+        })();
     </script>
 </body>
 </html>
