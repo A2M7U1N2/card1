@@ -3,8 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digital Card</title>
-    
+    <title>م. مارك عاطف - بطاقة تعريف رقمية</title>
+    <meta name="description" content="بطاقة تعريف رقمية لـ م. مارك عاطف - طالب في كلية هندسة قسم CCE. تواصل معي عبر الهاتف، واتساب، أو البريد الإلكتروني.">
+    <meta name="theme-color" content="#005eff">
+    <meta name="color-scheme" content="light dark">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="م. مارك عاطف - بطاقة تعريف رقمية">
+    <meta property="og:description" content="طالب في كلية هندسة قسم CCE - تواصل معي الآن">
+    <meta property="og:type" content="profile">
+    <meta property="og:locale" content="ar_EG">
+
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-P343LZ8Y1S"></script>
     <script>
@@ -13,50 +22,67 @@
       gtag('js', new Date());
       gtag('config', 'G-P343LZ8Y1S');
     </script>
-    
-    <!-- Font Awesome (نسخة مخففة) -->
+
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* ===== VARIABLES ===== */
         :root {
-            /* الألوان - ستتم تعبئتها ديناميكيًا من JavaScript */
             --primary: #005eff;
             --primary-dark: #003399;
+            --primary-light: #e8f0fe;
             --accent: #10b981;
             --contact-color: #6c63ff;
             --contact-hover: #554fd8;
-            --background: #f8fafc;
+            --background: #f0f4f8;
             --card-bg: #ffffff;
             --text: #1e293b;
             --text-light: #64748b;
-            
-            /* التنسيقات */
+            --border: #e2e8f0;
             --radius: 20px;
-            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            --transition: all 0.3s ease;
+            --radius-sm: 12px;
+            --shadow: 0 20px 60px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
+            --shadow-hover: 0 25px 70px rgba(0, 0, 0, 0.12);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
+
         /* ===== DARK MODE ===== */
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --background: #0f172a;
-                --card-bg: #1e293b;
-                --text: #f1f5f9;
-                --text-light: #94a3b8;
-                --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-                --contact-color: #7b73ff;
-                --contact-hover: #665fe6;
-            }
-            
-            .btn {
-                background: #334155;
-            }
-            
-            .social-btn {
-                background: #334155;
-            }
+        [data-theme="dark"] {
+            --background: #0c1222;
+            --card-bg: #1a2332;
+            --text: #e8edf5;
+            --text-light: #8899ad;
+            --border: #2a3a4e;
+            --primary-light: #0d2554;
+            --shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.2);
+            --shadow-hover: 0 25px 70px rgba(0, 0, 0, 0.5);
+            --contact-color: #7b73ff;
+            --contact-hover: #665fe6;
         }
-        
+
+        [data-theme="dark"] .btn {
+            background: #243044;
+        }
+
+        [data-theme="dark"] .social-btn {
+            background: #243044;
+        }
+
+        [data-theme="dark"] .modal-btn.secondary {
+            background: #243044;
+        }
+
+        [data-theme="dark"] .modal-input {
+            background: #0c1222;
+            border-color: #2a3a4e;
+            color: var(--text);
+        }
+
+        [data-theme="dark"] .footer {
+            border-top-color: #2a3a4e;
+        }
+
         /* ===== REDUCED MOTION ===== */
         @media (prefers-reduced-motion: reduce) {
             *,
@@ -67,335 +93,660 @@
                 transition-duration: 0.01ms !important;
                 scroll-behavior: auto !important;
             }
-            
+
             .btn:hover,
             .btn:active,
             .social-btn:hover {
                 transform: none !important;
             }
+
+            .avatar-ring {
+                animation: none !important;
+            }
+
+            .loader {
+                display: none !important;
+            }
         }
-        
+
         /* ===== RESET & BASE ===== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
             background: var(--background);
             color: var(--text);
             min-height: 100vh;
             padding: 20px;
             line-height: 1.6;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            transition: background-color 0.4s ease, color 0.4s ease;
+            overflow-x: hidden;
         }
-        
+
+        /* ===== LOADING SCREEN ===== */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--background);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .loader-spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid var(--border);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ===== BACKGROUND DECORATION ===== */
+        .bg-decoration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.08;
+            filter: blur(60px);
+        }
+
+        .bg-circle:nth-child(1) {
+            width: 400px;
+            height: 400px;
+            background: var(--primary);
+            top: -100px;
+            right: -100px;
+        }
+
+        .bg-circle:nth-child(2) {
+            width: 300px;
+            height: 300px;
+            background: var(--contact-color);
+            bottom: -50px;
+            left: -50px;
+        }
+
+        .bg-circle:nth-child(3) {
+            width: 200px;
+            height: 200px;
+            background: var(--accent);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
         /* ===== CARD ===== */
         .card {
-            max-width: 420px;
+            max-width: 440px;
             margin: 0 auto;
             background: var(--card-bg);
             border-radius: var(--radius);
             box-shadow: var(--shadow);
             overflow: hidden;
-            padding: 30px;
+            padding: 36px 30px 30px;
             transition: var(--transition);
+            position: relative;
+            z-index: 1;
+            border: 1px solid var(--border);
+            animation: cardEnter 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
         }
-        
+
+        @keyframes cardEnter {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.97);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* ===== THEME TOGGLE ===== */
+        .theme-toggle {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            background: var(--card-bg);
+            color: var(--text);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            z-index: 10;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: rotate(30deg);
+        }
+
+        .theme-toggle:active {
+            transform: scale(0.9);
+        }
+
+        /* ===== SHARE BUTTON ===== */
+        .share-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            background: var(--card-bg);
+            color: var(--text);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            transition: var(--transition);
+            z-index: 10;
+        }
+
+        .share-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: scale(1.08);
+        }
+
+        .share-btn:active {
+            transform: scale(0.9);
+        }
+
         /* ===== HEADER ===== */
         .header {
             text-align: center;
             margin-bottom: 30px;
+            padding-top: 10px;
         }
-        
+
+        .avatar-wrapper {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 20px;
+        }
+
+        .avatar-ring {
+            position: absolute;
+            top: -6px;
+            left: -6px;
+            width: 152px;
+            height: 152px;
+            border-radius: 50%;
+            background: conic-gradient(var(--primary), var(--accent), var(--contact-color), var(--primary));
+            animation: ringRotate 4s linear infinite;
+            opacity: 0.8;
+        }
+
+        @keyframes ringRotate {
+            to { transform: rotate(360deg); }
+        }
+
         .avatar {
             width: 140px;
             height: 140px;
             border-radius: 50%;
             object-fit: cover;
-            border: 5px solid var(--primary);
-            margin: 0 auto 20px;
-            background: var(--background);
+            background: var(--card-bg);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 48px;
             color: var(--primary);
             overflow: hidden;
+            position: relative;
+            z-index: 1;
+            border: 4px solid var(--card-bg);
         }
-        
+
         .avatar img {
             width: 100%;
             height: 100%;
             border-radius: 50%;
             object-fit: cover;
         }
-        
+
         .avatar i {
             font-size: 48px;
         }
-        
+
         .name {
-            font-size: 1.8rem;
-            font-weight: 700;
+            font-size: 1.9rem;
+            font-weight: 800;
             color: var(--text);
-            margin-bottom: 5px;
+            margin-bottom: 6px;
+            letter-spacing: -0.02em;
         }
-        
+
         .title {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             color: var(--primary);
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             font-weight: 600;
+            display: inline-block;
+            background: var(--primary-light);
+            padding: 4px 16px;
+            border-radius: 20px;
         }
-        
+
         .description {
             color: var(--text-light);
             font-size: 0.95rem;
             max-width: 320px;
             margin: 0 auto;
         }
-        
+
         /* ===== SECTIONS ===== */
         .section {
-            margin-bottom: 25px;
+            margin-bottom: 24px;
         }
-        
+
         .section-title {
-            font-size: 1rem;
-            color: var(--text);
-            margin-bottom: 15px;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-weight: 600;
+            gap: 8px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
-        
+
         .section-title i {
             color: var(--primary);
+            font-size: 0.9rem;
         }
-        
+
         /* ===== BUTTONS ===== */
         .buttons {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
         }
-        
+
         .btn {
             display: flex;
             align-items: center;
-            padding: 16px 20px;
-            background: #f1f5f9;
-            border-radius: 12px;
+            padding: 15px 18px;
+            background: var(--primary-light);
+            border-radius: var(--radius-sm);
             text-decoration: none;
             color: var(--text);
             transition: var(--transition);
-            border: 2px solid transparent;
+            border: 1px solid transparent;
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
         }
-        
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transition: width 0.4s ease, height 0.4s ease, top 0.4s ease, left 0.4s ease;
+            transform: translate(-50%, -50%);
+        }
+
+        .btn:hover::after {
+            width: 300px;
+            height: 300px;
+        }
+
         .btn:hover, .btn:active {
             background: var(--primary);
             color: white;
-            transform: translateX(-5px);
+            transform: translateX(-4px);
+            box-shadow: 0 4px 15px rgba(0, 94, 255, 0.25);
         }
-        
+
         .btn:hover i, .btn:active i {
             color: white;
         }
-        
+
         .btn i {
             width: 24px;
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             color: var(--primary);
             transition: var(--transition);
+            position: relative;
+            z-index: 1;
         }
-        
+
         .btn-text {
             flex: 1;
             font-weight: 500;
+            font-size: 0.95rem;
+            position: relative;
+            z-index: 1;
         }
-        
+
         .btn .fa-arrow-left {
-            font-size: 0.9rem;
-            opacity: 0.7;
+            font-size: 0.85rem;
+            opacity: 0;
+            transition: var(--transition);
+            position: relative;
+            z-index: 1;
         }
-        
+
+        .btn:hover .fa-arrow-left {
+            opacity: 0.8;
+        }
+
         .btn-copy {
-            margin-left: 10px;
+            margin-left: 8px;
             background: transparent;
             border: none;
             color: var(--primary);
             cursor: pointer;
-            padding: 5px;
-            border-radius: 4px;
-            transition: background-color 0.2s;
+            padding: 6px;
+            border-radius: 6px;
+            transition: var(--transition-fast);
+            position: relative;
+            z-index: 2;
         }
-        
+
         .btn-copy:hover {
-            background: rgba(0, 94, 255, 0.1);
+            background: rgba(0, 94, 255, 0.15);
+            transform: scale(1.1);
         }
-        
-        /* ===== زر حفظ الرقم - تنسيق محسن ===== */
+
+        .btn:hover .btn-copy {
+            color: white;
+        }
+
+        .btn:hover .btn-copy:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* ===== SAVE CONTACT BUTTON ===== */
         .save-contact .btn {
             background: linear-gradient(135deg, var(--contact-color) 0%, var(--contact-hover) 100%);
             color: white;
             border: none;
             font-weight: 600;
-            position: relative;
-            overflow: hidden;
         }
-        
+
         .save-contact .btn i {
             color: white;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
-        
+
         .save-contact .btn .btn-text {
-            /* font-weight: 600; */ /* تم إزالته لضمان تطابق الخط */
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
         }
-        
+
+        .save-contact .btn .fa-arrow-left {
+            opacity: 0.5;
+        }
+
         .save-contact .btn:hover, .save-contact .btn:active {
             background: linear-gradient(135deg, var(--contact-hover) 0%, var(--contact-color) 100%);
             color: white;
-            transform: translateX(-5px) scale(1.02);
-            box-shadow: 0 5px 15px rgba(108, 99, 255, 0.3);
+            transform: translateX(-4px) scale(1.02);
+            box-shadow: 0 6px 20px rgba(108, 99, 255, 0.35);
         }
-        
-        .save-contact .btn:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: 0.5s;
+
+        .save-contact .btn:hover .fa-arrow-left {
+            opacity: 0.8;
         }
-        
-        .save-contact .btn:hover:before {
-            left: 100%;
-        }
-        
+
         /* ===== SOCIAL ===== */
         .social {
             display: flex;
             justify-content: center;
-            gap: 15px;
-            margin-top: 20px;
+            gap: 12px;
+            margin-top: 24px;
         }
-        
+
         .social-btn {
-            width: 50px;
-            height: 50px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #f1f5f9;
+            background: var(--primary-light);
             color: var(--text);
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             text-decoration: none;
             transition: var(--transition);
+            border: 1px solid transparent;
         }
-        
+
         .social-btn:hover {
-            background: var(--primary);
             color: white;
-            transform: translateY(-3px);
+            transform: translateY(-4px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            border-color: transparent;
         }
-        
+
+        .social-btn[aria-label*="فيسبوك"]:hover,
+        .social-btn[aria-label*="facebook"]:hover {
+            background: #1877f2;
+        }
+
+        .social-btn[aria-label*="إنستجرام"]:hover,
+        .social-btn[aria-label*="instagram"]:hover {
+            background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+        }
+
+        .social-btn[aria-label*="جيت هاب"]:hover,
+        .social-btn[aria-label*="github"]:hover {
+            background: #333;
+        }
+
+        .social-btn[aria-label*="لينكدإن"]:hover,
+        .social-btn[aria-label*="linkedin"]:hover {
+            background: #0077b5;
+        }
+
         /* ===== WHATSAPP SPECIAL ===== */
         .whatsapp .btn {
-            background: #25d366;
+            background: linear-gradient(135deg, #25d366, #128c7e);
             color: white;
             border: none;
         }
-        
+
         .whatsapp .btn i {
             color: white;
         }
-        
+
         .whatsapp .btn:hover {
-            background: #128c7e;
+            background: linear-gradient(135deg, #128c7e, #075e54);
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
         }
-        
+
         /* ===== FOOTER ===== */
         .footer {
             text-align: center;
-            margin-top: 30px;
+            margin-top: 28px;
             padding-top: 20px;
-            border-top: 1px solid #e2e8f0;
+            border-top: 1px solid var(--border);
             color: var(--text-light);
-            font-size: 0.85rem;
+            font-size: 0.82rem;
         }
-        
+
+        .footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
         /* ===== RESPONSIVE ===== */
         @media (max-width: 480px) {
-            .card {
-                padding: 25px 20px;
+            body {
+                padding: 12px;
             }
-            
+
+            .card {
+                padding: 28px 20px 24px;
+                border-radius: 16px;
+            }
+
+            .avatar-wrapper {
+                width: 120px;
+                height: 120px;
+            }
+
+            .avatar-ring {
+                width: 132px;
+                height: 132px;
+            }
+
             .avatar {
                 width: 120px;
                 height: 120px;
             }
-            
+
             .name {
                 font-size: 1.6rem;
             }
-            
+
             .btn {
+                padding: 13px 15px;
+            }
+
+            .save-contact .btn {
                 padding: 14px 16px;
             }
-            
-            .save-contact .btn {
-                padding: 15px 18px;
+
+            .social-btn {
+                width: 44px;
+                height: 44px;
+                font-size: 1.05rem;
+            }
+
+            .theme-toggle,
+            .share-btn {
+                width: 38px;
+                height: 38px;
+                font-size: 1rem;
             }
         }
-        
+
         /* ===== LTR SUPPORT ===== */
         [dir="ltr"] .btn:hover {
-            transform: translateX(5px);
+            transform: translateX(4px);
         }
-        
+
         [dir="ltr"] .save-contact .btn:hover {
-            transform: translateX(5px) scale(1.02);
+            transform: translateX(4px) scale(1.02);
         }
-        
+
         [dir="ltr"] .btn .fa-arrow-left {
             transform: rotate(180deg);
         }
-        
+
         [dir="ltr"] body {
             text-align: left;
         }
-        
+
         /* ===== TOAST NOTIFICATION ===== */
         .toast {
             position: fixed;
-            bottom: 20px;
+            bottom: 30px;
             left: 50%;
-            transform: translateX(-50%);
-            background: var(--primary);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            z-index: 1000;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--card-bg);
+            color: var(--text);
+            padding: 14px 24px;
+            border-radius: var(--radius-sm);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            z-index: 2000;
             opacity: 0;
-            transition: opacity 0.3s;
+            visibility: hidden;
+            transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border: 1px solid var(--border);
+            max-width: 90vw;
         }
-        
+
         .toast.show {
             opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
         }
-        
-        /* ===== MODAL للاسم ===== */
+
+        .toast-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 0.8rem;
+        }
+
+        .toast-icon.success {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+        }
+
+        .toast-icon.error {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+        }
+
+        .toast-icon.info {
+            background: rgba(0, 94, 255, 0.15);
+            color: var(--primary);
+        }
+
+        /* ===== MODAL ===== */
         .contact-modal {
             display: none;
             position: fixed;
@@ -403,116 +754,288 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
             z-index: 1000;
             align-items: center;
             justify-content: center;
         }
-        
+
         .contact-modal.show {
             display: flex;
         }
-        
+
+        .contact-modal.show .modal-content {
+            animation: modalEnter 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        @keyframes modalEnter {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
         .modal-content {
             background: var(--card-bg);
-            padding: 30px;
+            padding: 28px;
             border-radius: var(--radius);
-            max-width: 400px;
+            max-width: 380px;
             width: 90%;
-            box-shadow: var(--shadow);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
         }
-        
+
         .modal-title {
-            font-size: 1.2rem;
-            color: var(--primary);
-            margin-bottom: 15px;
+            font-size: 1.15rem;
+            color: var(--text);
+            margin-bottom: 6px;
             text-align: center;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
-        
+
+        .modal-title i {
+            color: var(--primary);
+        }
+
+        .modal-subtitle {
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+        }
+
         .modal-input {
             width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e2e8f0;
+            padding: 12px 16px;
+            border: 2px solid var(--border);
             border-radius: 10px;
             font-size: 1rem;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             transition: var(--transition);
+            background: var(--background);
+            color: var(--text);
+            font-family: inherit;
         }
-        
+
         .modal-input:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(0, 94, 255, 0.1);
         }
-        
+
         .modal-actions {
             display: flex;
             gap: 10px;
         }
-        
+
         .modal-btn {
             flex: 1;
             padding: 12px;
             border: none;
             border-radius: 10px;
-            font-size: 1rem;
+            font-size: 0.95rem;
             cursor: pointer;
             transition: var(--transition);
+            font-weight: 600;
+            font-family: inherit;
         }
-        
+
         .modal-btn.primary {
             background: var(--primary);
             color: white;
         }
-        
+
         .modal-btn.primary:hover {
             background: var(--primary-dark);
+            box-shadow: 0 4px 12px rgba(0, 94, 255, 0.3);
         }
-        
+
         .modal-btn.secondary {
-            background: #f1f5f9;
+            background: var(--primary-light);
             color: var(--text);
         }
-        
+
         .modal-btn.secondary:hover {
-            background: #e2e8f0;
+            background: var(--border);
+        }
+
+        /* ===== STAGGER ANIMATION ===== */
+        .section {
+            animation: staggerIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        .section:nth-child(1) { animation-delay: 0.1s; }
+        .section:nth-child(2) { animation-delay: 0.2s; }
+        .section:nth-child(3) { animation-delay: 0.3s; }
+        .section:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes staggerIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .social {
+            animation: staggerIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+            animation-delay: 0.4s;
+        }
+
+        /* ===== QR CODE MODAL ===== */
+        .qr-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qr-overlay.show {
+            display: flex;
+        }
+
+        .qr-overlay.show .qr-content {
+            animation: modalEnter 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        .qr-content {
+            background: var(--card-bg);
+            padding: 28px;
+            border-radius: var(--radius);
+            text-align: center;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            max-width: 320px;
+            width: 90%;
+        }
+
+        .qr-content h3 {
+            color: var(--text);
+            margin-bottom: 4px;
+            font-size: 1.1rem;
+        }
+
+        .qr-content p {
+            color: var(--text-light);
+            font-size: 0.85rem;
+            margin-bottom: 16px;
+        }
+
+        .qr-content canvas {
+            border-radius: 12px;
+            max-width: 100%;
+        }
+
+        .qr-close {
+            margin-top: 16px;
+            padding: 10px 24px;
+            border: none;
+            border-radius: 10px;
+            background: var(--primary);
+            color: white;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: var(--transition);
+            font-family: inherit;
+        }
+
+        .qr-close:hover {
+            background: var(--primary-dark);
         }
     </style>
 </head>
 <body>
+    <!-- Loading Screen -->
+    <div class="loader" id="loader">
+        <div class="loader-spinner"></div>
+    </div>
+
+    <!-- Background Decoration -->
+    <div class="bg-decoration" aria-hidden="true">
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+    </div>
+
     <div class="card" id="digitalCard">
+        <!-- Theme Toggle -->
+        <button class="theme-toggle" id="themeToggle" aria-label="تبديل الوضع الليلي/النهاري">
+            <i class="fas fa-moon"></i>
+        </button>
+
+        <!-- Share Button -->
+        <button class="share-btn" id="shareBtn" aria-label="مشاركة البطاقة">
+            <i class="fas fa-share-alt"></i>
+        </button>
+
         <!-- Header -->
         <div class="header" id="header"></div>
-        
-        <!-- Sections will be dynamically added here -->
+
+        <!-- Sections -->
         <div id="sections"></div>
-        
+
         <!-- Social Media -->
         <div class="social" id="social"></div>
-        
+
         <!-- Footer -->
         <div class="footer" id="footer"></div>
     </div>
-    
+
     <!-- Toast Notification -->
-    <div class="toast" id="toast"></div>
-    
+    <div class="toast" id="toast" role="alert" aria-live="polite"></div>
+
     <!-- Modal for Contact Name -->
-    <div class="contact-modal" id="contactModal">
+    <div class="contact-modal" id="contactModal" role="dialog" aria-modal="true" aria-labelledby="modalTitleText">
         <div class="modal-content">
-            <div class="modal-title">
-                <i class="fas fa-user-plus" style="margin-left: 8px;"></i>
-                إدخال اسم جهة الاتصال
+            <div class="modal-title" id="modalTitleText">
+                <i class="fas fa-user-plus"></i>
+                حفظ جهة الاتصال
             </div>
-            <input type="text" 
-                   id="contactNameInput" 
-                   class="modal-input" 
-                   placeholder="أدخل اسم جهة الاتصال..."
-                   maxlength="30">
+            <div class="modal-subtitle">أدخل الاسم المراد حفظه في جهات الاتصال</div>
+            <input type="text"
+                   id="contactNameInput"
+                   class="modal-input"
+                   placeholder="اسم جهة الاتصال..."
+                   maxlength="50"
+                   autocomplete="name">
             <div class="modal-actions">
                 <button class="modal-btn secondary" id="cancelBtn">إلغاء</button>
-                <button class="modal-btn primary" id="confirmBtn">حفظ الرقم</button>
+                <button class="modal-btn primary" id="confirmBtn">
+                    <i class="fas fa-download" style="margin-left: 6px; font-size: 0.85rem;"></i>
+                    حفظ
+                </button>
             </div>
+        </div>
+    </div>
+
+    <!-- QR Code Overlay -->
+    <div class="qr-overlay" id="qrOverlay" role="dialog" aria-modal="true">
+        <div class="qr-content">
+            <h3>مشاركة البطاقة</h3>
+            <p>امسح الكود لفتح البطاقة</p>
+            <canvas id="qrCanvas"></canvas>
+            <br>
+            <button class="qr-close" id="qrClose">إغلاق</button>
         </div>
     </div>
 
@@ -525,20 +1048,23 @@
                 accent: "#10b981",
                 contactColor: "#6c63ff",
                 contactHover: "#554fd8",
-                background: "#f8fafc",
+                background: "#f0f4f8",
                 cardBackground: "#ffffff",
                 text: "#1e293b",
                 textLight: "#64748b"
             },
-            
+
             direction: "rtl",
             language: "ar",
-            
+
             name: "م. مارك عاطف",
             title: "طالب في كلية هندسة قسم CCE",
             description: "",
             photo: "https://scontent.fcai30-1.fna.fbcdn.net/v/t51.82787-15/601916198_18521282161064714_3691868551651814149_n.jpg?stp=dst-jpegr_tt6&_nc_cat=106&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeFS_ut0OQsCb3arN_boOdtHHFkOVyWDZE4cWQ5XJYNkTtLW4fsO4eQYHOsA0kN__IHqbLJU4U4N9NVCsXCOpxAD&_nc_ohc=UHXISo0Bo-MQ7kNvwH6hc33&_nc_oc=AdmA1VFn4Wrnuz8sTUYldOWRPImbw8n5yupFkE4BHv6ZxL-oq9Nzai7fmaMtDQQUPvY&_nc_zt=23&se=-1&_nc_ht=scontent.fcai30-1.fna&_nc_gid=K4xGoLuhx5K4i1rZ_cMmsA&oh=00_AfudIwDbytfV9Z9RWWnfuY6SuG4U_JIc-uAlCCNCPsndYA&oe=698FC0D1",
-            
+
+            phone: "01140567825",
+            email: "markatf219@gmail.com",
+
             sections: [
                 {
                     title: "التواصل",
@@ -547,8 +1073,8 @@
                         { icon: "fas fa-phone", text: "01140567825", link: "tel:01140567825", type: "phone", copyable: true },
                         { icon: "fab fa-whatsapp", text: "واتساب", link: "https://wa.me/201140567825", type: "whatsapp" },
                         { icon: "fas fa-envelope", text: "الإيميل", link: "mailto:markatf219@gmail.com" },
-                        { 
-                            icon: "fas fa-address-book", 
+                        {
+                            icon: "fas fa-address-book",
                             text: "حفظ الرقم في جهات الاتصال",
                             type: "save-contact"
                         }
@@ -569,197 +1095,349 @@
                     ]
                 }
             ],
-            
+
             social: [
                 { icon: "fab fa-facebook-f", link: "https://web.facebook.com/mark.atef.587/", label: "فيسبوك" },
                 { icon: "fab fa-instagram",  link: "https://www.instagram.com/_mark_atef_/", label: "إنستجرام" },
                 { icon: "fab fa-github",     link: "https://github.com/A2M7U1N2", label: "جيت هاب" },
                 { icon: "fab fa-linkedin-in",link: "https://www.linkedin.com/in/mark-atef-796003264/", label: "لينكدإن" }
             ],
-            
+
             footerText: "© 2026 - جميع الحقوق محفوظة"
         };
-        
+
+        // ==================== THEME MANAGEMENT ====================
+
+        function getPreferredTheme() {
+            const saved = localStorage.getItem('theme');
+            if (saved) return saved;
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+
+            const icon = document.querySelector('#themeToggle i');
+            if (icon) {
+                icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            }
+
+            // Update meta theme-color
+            const metaTheme = document.querySelector('meta[name="theme-color"]');
+            if (metaTheme) {
+                metaTheme.content = theme === 'dark' ? '#0c1222' : '#005eff';
+            }
+        }
+
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme') || 'light';
+            const next = current === 'dark' ? 'light' : 'dark';
+            applyTheme(next);
+        }
+
         // ==================== UTILITY FUNCTIONS ====================
-        
-        function showToast(message) {
+
+        let toastTimeout;
+        function showToast(message, type = 'success') {
             const toast = document.getElementById('toast');
-            toast.textContent = message;
+            clearTimeout(toastTimeout);
+
+            const iconMap = {
+                success: '<div class="toast-icon success"><i class="fas fa-check"></i></div>',
+                error: '<div class="toast-icon error"><i class="fas fa-times"></i></div>',
+                info: '<div class="toast-icon info"><i class="fas fa-info"></i></div>'
+            };
+
+            toast.innerHTML = `${iconMap[type] || iconMap.info}<span>${message}</span>`;
             toast.classList.add('show');
-            
-            setTimeout(() => {
+
+            toastTimeout = setTimeout(() => {
                 toast.classList.remove('show');
             }, 3000);
         }
-        
+
         function copyToClipboard(text) {
             navigator.clipboard.writeText(text)
                 .then(() => {
-                    showToast("تم نسخ الرقم: " + text);
+                    showToast("تم نسخ الرقم: " + text, 'success');
                 })
-                .catch(err => {
-                    console.error('Failed to copy: ', err);
-                    showToast("حدث خطأ أثناء النسخ");
+                .catch(() => {
+                    // Fallback for older browsers
+                    const textArea = document.createElement('textarea');
+                    textArea.value = text;
+                    textArea.style.position = 'fixed';
+                    textArea.style.opacity = '0';
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    try {
+                        document.execCommand('copy');
+                        showToast("تم نسخ الرقم: " + text, 'success');
+                    } catch (e) {
+                        showToast("حدث خطأ أثناء النسخ", 'error');
+                    }
+                    document.body.removeChild(textArea);
                 });
         }
-        
+
+        // ==================== SHARE FUNCTIONALITY ====================
+
+        function shareCard() {
+            const url = window.location.href;
+            const title = cardData.name + ' - بطاقة تعريف رقمية';
+            const text = `${cardData.name} - ${cardData.title}`;
+
+            if (navigator.share) {
+                navigator.share({ title, text, url })
+                    .catch(() => {
+                        // User cancelled or not supported - fall back to QR
+                        showQRCode(url);
+                    });
+            } else {
+                // Desktop fallback: show QR code
+                showQRCode(url);
+            }
+        }
+
+        // ==================== QR CODE (Simple Canvas) ====================
+
+        function showQRCode(url) {
+            // Copy URL to clipboard as alternative
+            navigator.clipboard.writeText(url).then(() => {
+                showToast("تم نسخ رابط البطاقة", 'info');
+            }).catch(() => {});
+
+            const overlay = document.getElementById('qrOverlay');
+            const canvas = document.getElementById('qrCanvas');
+            const ctx = canvas.getContext('2d');
+
+            // Draw a simple branded card with the URL
+            canvas.width = 240;
+            canvas.height = 240;
+
+            // Background
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, 240, 240);
+
+            // Border
+            ctx.strokeStyle = cardData.colors.primary;
+            ctx.lineWidth = 4;
+            ctx.roundRect(2, 2, 236, 236, 16);
+            ctx.stroke();
+
+            // Icon
+            ctx.fillStyle = cardData.colors.primary;
+            ctx.font = 'bold 20px system-ui';
+            ctx.textAlign = 'center';
+            ctx.fillText('📱', 120, 80);
+
+            // Name
+            ctx.fillStyle = '#1e293b';
+            ctx.font = 'bold 16px system-ui';
+            ctx.fillText(cardData.name, 120, 120);
+
+            // Title
+            ctx.fillStyle = '#64748b';
+            ctx.font = '12px system-ui';
+            ctx.fillText(cardData.title, 120, 145);
+
+            // URL hint
+            ctx.fillStyle = cardData.colors.primary;
+            ctx.font = 'bold 11px system-ui';
+            ctx.fillText('تم نسخ الرابط!', 120, 190);
+            ctx.fillStyle = '#94a3b8';
+            ctx.font = '10px system-ui';
+            const shortUrl = url.replace(/^https?:\/\//, '').substring(0, 35);
+            ctx.fillText(shortUrl, 120, 210);
+
+            overlay.classList.add('show');
+        }
+
+        function hideQRCode() {
+            document.getElementById('qrOverlay').classList.remove('show');
+        }
+
         // ==================== CONTACT SAVING FUNCTIONS ====================
-        
+
         function showContactModal() {
             const modal = document.getElementById('contactModal');
             const input = document.getElementById('contactNameInput');
-            
-            // تعيين القيمة الافتراضية
+
             input.value = cardData.name;
-            
-            // عرض المودال
             modal.classList.add('show');
-            
-            // تركيز على حقل الإدخال
+
             setTimeout(() => {
                 input.focus();
                 input.select();
             }, 100);
         }
-        
+
         function hideContactModal() {
-            const modal = document.getElementById('contactModal');
-            modal.classList.remove('show');
+            document.getElementById('contactModal').classList.remove('show');
         }
-        
+
         function saveContactToPhone(contactName) {
-            // الحصول على رقم الهاتف
             const phoneButton = cardData.sections[0].buttons.find(btn => btn.type === 'phone');
             const phoneNumber = phoneButton ? phoneButton.text : '';
-            
+
             if (!phoneNumber) {
-                showToast("لم يتم العثور على رقم الهاتف");
+                showToast("لم يتم العثور على رقم الهاتف", 'error');
                 return;
             }
-            
+
             if (!contactName) {
-                showToast("الرجاء إدخال اسم جهة الاتصال");
+                showToast("الرجاء إدخال اسم جهة الاتصال", 'error');
                 return;
             }
-            
-            // إنشاء vCard
+
+            // Enhanced vCard with more fields
             const cleanPhone = phoneNumber.replace(/\D/g, '');
-            const vCardData = `BEGIN:VCARD
-VERSION:3.0
-FN:${contactName}
-TEL;TYPE=CELL,VOICE:${cleanPhone}
-END:VCARD`;
-            
-            // إنشاء ملف للتحميل
+            const email = cardData.email || '';
+            const url = window.location.href;
+
+            let vCardData = `BEGIN:VCARD\r\nVERSION:3.0\r\nFN:${contactName}\r\nTEL;TYPE=CELL,VOICE:+2${cleanPhone}\r\n`;
+
+            if (email) {
+                vCardData += `EMAIL;TYPE=INTERNET:${email}\r\n`;
+            }
+
+            if (cardData.title) {
+                vCardData += `TITLE:${cardData.title}\r\n`;
+            }
+
+            vCardData += `URL:${url}\r\n`;
+
+            // Add social profiles
+            cardData.social.forEach(s => {
+                vCardData += `X-SOCIALPROFILE;TYPE=${s.label}:${s.link}\r\n`;
+            });
+
+            vCardData += `END:VCARD`;
+
             const blob = new Blob([vCardData], { type: 'text/vcard;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            
+            const blobUrl = URL.createObjectURL(blob);
+
             const link = document.createElement('a');
-            link.href = url;
+            link.href = blobUrl;
             link.download = `${contactName.replace(/\s+/g, '_')}.vcf`;
             link.style.display = 'none';
-            
+
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            
-            // تحرير الذاكرة
-            setTimeout(() => URL.revokeObjectURL(url), 100);
-            
-            showToast(`تم إنشاء ملف جهة الاتصال: ${contactName}`);
-            
-            // إرسال حدث لـ Google Analytics
+
+            setTimeout(() => URL.revokeObjectURL(blobUrl), 100);
+
+            showToast(`تم حفظ جهة الاتصال: ${contactName}`, 'success');
+
             if (typeof gtag !== 'undefined') {
                 gtag('event', 'save_contact', {
                     'event_category': 'engagement',
-                    'event_label': 'حفظ الرقم',
+                    'event_label': contactName,
                     'value': 1
                 });
             }
         }
-        
+
         // ==================== EVENT LISTENERS ====================
-        
+
         function setupEventListeners() {
-            // زر الإلغاء في المودال
+            // Theme toggle
+            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+            // Share button
+            document.getElementById('shareBtn').addEventListener('click', shareCard);
+
+            // QR overlay close
+            document.getElementById('qrClose').addEventListener('click', hideQRCode);
+            document.getElementById('qrOverlay').addEventListener('click', (e) => {
+                if (e.target.classList.contains('qr-overlay')) hideQRCode();
+            });
+
+            // Modal - cancel
             document.getElementById('cancelBtn').addEventListener('click', hideContactModal);
-            
-            // زر التأكيد في المودال
+
+            // Modal - confirm
             document.getElementById('confirmBtn').addEventListener('click', () => {
                 const contactName = document.getElementById('contactNameInput').value.trim();
                 hideContactModal();
-                
                 if (contactName) {
                     saveContactToPhone(contactName);
                 }
             });
-            
-            // السماح بالضغط على Enter في حقل الإدخال
+
+            // Modal - Enter key
             document.getElementById('contactNameInput').addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
                     document.getElementById('confirmBtn').click();
                 }
             });
-            
-            // إغلاق المودال عند النقر خارج المحتوى
+
+            // Modal - click outside
             document.getElementById('contactModal').addEventListener('click', (e) => {
                 if (e.target.classList.contains('contact-modal')) {
                     hideContactModal();
                 }
             });
+
+            // Escape key closes modals
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    hideContactModal();
+                    hideQRCode();
+                }
+            });
         }
-        
+
         // ==================== BUTTON CREATION ====================
-        
-        function createButton(buttonData, sectionType = '') {
+
+        function createButton(buttonData) {
+            const button = document.createElement('a');
+
             if (buttonData.type === 'save-contact') {
-                // استخدام <a> بدلاً من <button> لضمان نفس خصائص الخط
-                const button = document.createElement('a');
                 button.href = "javascript:void(0)";
-                button.className = `btn ${buttonData.type || ''}`;
+                button.className = 'btn';
                 button.setAttribute('aria-label', buttonData.text);
-                button.setAttribute('role', 'button'); // للحفاظ على سلوك زر لإمكانية الوصول
-                
+                button.setAttribute('role', 'button');
+
                 button.innerHTML = `
                     <i class="${buttonData.icon}"></i>
                     <span class="btn-text">${buttonData.text}</span>
                     <i class="fas fa-arrow-left"></i>
                 `;
-                
+
                 button.addEventListener('click', (e) => {
                     e.preventDefault();
                     showContactModal();
                 });
-                
+
                 return button;
             }
-            
-            // باقي الأزرار العادية
-            const button = document.createElement('a');
+
             button.href = buttonData.link;
             button.className = `btn ${buttonData.type || ''}`;
-            
-            if (buttonData.link && !buttonData.link.startsWith('tel:')) {
+
+            if (buttonData.link && !buttonData.link.startsWith('tel:') && !buttonData.link.startsWith('mailto:')) {
                 button.target = '_blank';
                 button.rel = 'noopener noreferrer';
             }
-            
+
             button.setAttribute('aria-label', buttonData.text);
-            
+
             let copyButton = '';
             if (buttonData.copyable) {
-                copyButton = `<button class="btn-copy" aria-label="نسخ الرقم">
+                copyButton = `<button class="btn-copy" aria-label="نسخ الرقم" title="نسخ الرقم">
                     <i class="fas fa-copy"></i>
                 </button>`;
             }
-            
+
             button.innerHTML = `
                 <i class="${buttonData.icon}"></i>
                 <span class="btn-text">${buttonData.text}</span>
                 <i class="fas fa-arrow-left"></i>
                 ${copyButton}
             `;
-            
+
             if (buttonData.copyable) {
                 const copyBtn = button.querySelector('.btn-copy');
                 copyBtn.addEventListener('click', (e) => {
@@ -768,99 +1446,112 @@ END:VCARD`;
                     copyToClipboard(buttonData.text);
                 });
             }
-            
+
             return button;
         }
-        
+
         // ==================== RENDER FUNCTIONS ====================
-        
+
         function applyColors() {
             const root = document.documentElement;
             const colors = cardData.colors;
-            
+
             root.style.setProperty('--primary', colors.primary);
             root.style.setProperty('--primary-dark', colors.primaryDark);
             root.style.setProperty('--accent', colors.accent);
             root.style.setProperty('--contact-color', colors.contactColor);
             root.style.setProperty('--contact-hover', colors.contactHover);
-            root.style.setProperty('--background', colors.background);
-            root.style.setProperty('--card-bg', colors.cardBackground);
-            root.style.setProperty('--text', colors.text);
-            root.style.setProperty('--text-light', colors.textLight);
         }
-        
+
         function renderAvatar() {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'avatar-wrapper';
+
+            const ring = document.createElement('div');
+            ring.className = 'avatar-ring';
+            ring.setAttribute('aria-hidden', 'true');
+
             const avatarDiv = document.createElement('div');
             avatarDiv.className = 'avatar';
-            
+
             if (cardData.photo) {
                 const img = document.createElement('img');
                 img.src = cardData.photo;
                 img.alt = cardData.name;
-                img.loading = 'lazy';
+                img.loading = 'eager';
+                img.decoding = 'async';
                 avatarDiv.appendChild(img);
             } else {
                 const icon = document.createElement('i');
                 icon.className = 'fas fa-user';
                 avatarDiv.appendChild(icon);
             }
-            
-            return avatarDiv;
+
+            wrapper.appendChild(ring);
+            wrapper.appendChild(avatarDiv);
+            return wrapper;
         }
-        
+
         function renderHeader() {
             const header = document.getElementById('header');
-            
+
             const avatar = renderAvatar();
-            
+
             const nameEl = document.createElement('h1');
             nameEl.className = 'name';
             nameEl.textContent = cardData.name;
-            
+
             const titleEl = document.createElement('div');
             titleEl.className = 'title';
             titleEl.textContent = cardData.title;
-            
-            const descEl = document.createElement('div');
-            descEl.className = 'description';
-            descEl.textContent = cardData.description;
-            
+
             header.innerHTML = '';
             header.appendChild(avatar);
             header.appendChild(nameEl);
             header.appendChild(titleEl);
-            header.appendChild(descEl);
+
+            if (cardData.description) {
+                const descEl = document.createElement('div');
+                descEl.className = 'description';
+                descEl.textContent = cardData.description;
+                header.appendChild(descEl);
+            }
         }
-        
+
         function renderSections() {
             const container = document.getElementById('sections');
             container.innerHTML = '';
-            
+
             cardData.sections.forEach(section => {
                 const sectionEl = document.createElement('div');
                 sectionEl.className = 'section';
-                
+
                 const titleEl = document.createElement('div');
                 titleEl.className = 'section-title';
                 titleEl.innerHTML = `<i class="${section.icon}"></i> ${section.title}`;
-                
+
                 const buttonsEl = document.createElement('div');
                 buttonsEl.className = 'buttons';
-                
-                section.buttons.forEach(button => {
-                    buttonsEl.appendChild(createButton(button, section.title));
+
+                section.buttons.forEach(buttonInfo => {
+                    const wrapper = document.createElement('div');
+                    if (buttonInfo.type === 'whatsapp') wrapper.className = 'whatsapp';
+                    else if (buttonInfo.type === 'save-contact') wrapper.className = 'save-contact';
+
+                    wrapper.appendChild(createButton(buttonInfo));
+                    buttonsEl.appendChild(wrapper);
                 });
-                
+
                 sectionEl.appendChild(titleEl);
                 sectionEl.appendChild(buttonsEl);
                 container.appendChild(sectionEl);
             });
         }
-        
+
         function renderSocial() {
             const container = document.getElementById('social');
             container.innerHTML = '';
-            
+
             cardData.social.forEach(social => {
                 const linkEl = document.createElement('a');
                 linkEl.href = social.link;
@@ -869,22 +1560,25 @@ END:VCARD`;
                 linkEl.rel = 'noopener noreferrer';
                 linkEl.setAttribute('aria-label', social.label || social.icon.replace('fab fa-', ''));
                 linkEl.innerHTML = `<i class="${social.icon}"></i>`;
-                
                 container.appendChild(linkEl);
             });
         }
-        
+
         function renderFooter() {
             const footer = document.getElementById('footer');
-            footer.textContent = cardData.footerText;
+            footer.innerHTML = cardData.footerText;
         }
-        
+
         // ==================== INITIALIZATION ====================
-        
+
         function initApp() {
+            // Apply theme immediately
+            applyTheme(getPreferredTheme());
+
             document.documentElement.dir = cardData.direction;
             document.documentElement.lang = cardData.language;
-            
+            document.title = cardData.name + ' - بطاقة تعريف رقمية';
+
             applyColors();
             renderHeader();
             renderSections();
@@ -892,7 +1586,13 @@ END:VCARD`;
             renderFooter();
             setupEventListeners();
             addTouchInteractions();
-            
+
+            // Hide loader
+            const loader = document.getElementById('loader');
+            setTimeout(() => {
+                loader.classList.add('hidden');
+            }, 400);
+
             if (typeof gtag !== 'undefined') {
                 gtag('event', 'page_view', {
                     'page_title': document.title,
@@ -901,19 +1601,19 @@ END:VCARD`;
                 });
             }
         }
-        
+
         function addTouchInteractions() {
             const buttons = document.querySelectorAll('.btn, .social-btn');
-            
+
             buttons.forEach(btn => {
                 btn.addEventListener('touchstart', function() {
-                    this.style.transform = 'scale(0.95)';
-                });
-                
+                    this.style.transform = 'scale(0.96)';
+                }, { passive: true });
+
                 btn.addEventListener('touchend', function() {
                     this.style.transform = '';
-                });
-                
+                }, { passive: true });
+
                 if (typeof gtag !== 'undefined') {
                     btn.addEventListener('click', function() {
                         let buttonLabel = '';
@@ -924,7 +1624,7 @@ END:VCARD`;
                             const icon = this.querySelector('i');
                             buttonLabel = icon ? icon.className.replace('fab fa-', '').replace('fas fa-', '').replace('far fa-', '') : 'button';
                         }
-                        
+
                         gtag('event', 'click', {
                             'event_category': 'engagement',
                             'event_label': buttonLabel,
@@ -934,10 +1634,10 @@ END:VCARD`;
                 }
             });
         }
-        
+
         document.addEventListener('DOMContentLoaded', initApp);
-        
-        // ==================== EXPORT FUNCTIONS ====================
+
+        // ==================== EXPORT API ====================
         window.cardManager = {
             addSection: (sectionData) => {
                 cardData.sections.push(sectionData);
@@ -952,7 +1652,8 @@ END:VCARD`;
                 Object.assign(cardData.colors, newColors);
                 applyColors();
             },
-            getData: () => cardData
+            toggleTheme,
+            getData: () => ({ ...cardData })
         };
     </script>
 </body>
